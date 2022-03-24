@@ -200,7 +200,7 @@ function checkPuzzle() {
 			tswapTiles(tcorrectPlace(i), tfindTile(i));
 			swaps++;
 		}
-		console.log(swaps, tempTABLE);
+		//console.log(swaps, tempTABLE);
 	}
 	if (swaps % 2 == 0)
 		return true;
