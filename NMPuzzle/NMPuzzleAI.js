@@ -24,7 +24,7 @@ async function runAI() {
 
 			//console.log(target);
 			//if ((tableArr.length-2 <= findTile(target)[0] <= tableArr.length-1) && (tableArr[0].length-3 <= findTile(target)[1] <= tableArr[0].length-1)) {
-			console.log("targ: " + target);
+			//console.log("targ: " + target);
 			if (correctPlace(target)[0] >= tableArr.length - 2 && correctPlace(target)[1] > tableArr[0].length - 2) {
 				//console.log(tableArr.length);
 				//console.log(tableArr[0].length);
@@ -195,18 +195,18 @@ if (temp[1]==OpenTile[1]+1 && temp[0] == OpenTile[0]) {
 		if (findTile()[1] >= tableArr[0].length - 1)
 			break;
 		swap(2);
-		console.log("swappin\'");
+		//console.log("swappin\'");
 	}
-	console.log(findTile()[1]);
-	console.log(tableArr[0].length - 1);
-	console.log("End!");
+	//console.log(findTile()[1]);
+	//console.log(tableArr[0].length - 1);
+	//console.log("End!");
 
 	//Pass to brute force solver.
 	let sx = tableArr.length - 2;
 	let ex = tableArr.length - 1;
 	let sy = tableArr[0].length - 3;
 	let ey = tableArr[0].length - 1;
-	console.log(tableArr.slice(sx, ex + 1).map(el=>el.slice(sy, ey + 1)));
+	//console.log(tableArr.slice(sx, ex + 1).map(el=>el.slice(sy, ey + 1)));
 	solve2By3(tableArr.slice(sx, ex + 1).map(el=>el.slice(sy, ey + 1)), tableArr[0].length, tableArr.length);
 
 	running = false;
@@ -395,7 +395,7 @@ function moveUp(dir=1) {
 function moveLeft(dir=1) {
 	tableArr = TabletoArray();
 	OpenTile = findTile();
-	console.log(OpenTile);
+	//console.log(OpenTile);
 	//if (0 > OpenTile[0]+dir || OpenTile[0]+dir > tableArr.length-1) {
 	//	return;
 	//}
@@ -767,7 +767,7 @@ function solve2By3(grid, sizex=3, sizey=2) {
 		goalGrid[0][i] -= sizex - 3;
 	}
 
-	console.log(goalGrid);
+	//console.log(goalGrid);
 
 	t = setInterval(function() {
 		solver();
@@ -971,16 +971,16 @@ class grid {
 let counter = 0;
 let SPEED = 1000;
 let STEPS = 100000;
-console.log("Starting Grid: " + currGrid);
-console.log("Target Grid: " + goalGrid);
+//console.log("Starting Grid: " + currGrid);
+//console.log("Target Grid: " + goalGrid);
 
 function solver() {
 	counter++;
 	if (counter > STEPS || calcHScores(currGrid) >= currGrid.length * currGrid[0].length - 1) {
 		counter = 0;
-		console.log("clearing.");
-		console.log(calcHScores(currGrid));
-		console.log("Ending Grid: " + currGrid);
+		//console.log("clearing.");
+		//console.log(calcHScores(currGrid));
+		//console.log("Ending Grid: " + currGrid);
 		for (let i = 0; i < 2; i++) {
 			for (let j = 0; j < 3; j++) {
 				tableArr[tableArr.length - 2 + i][tableArr[0].length - 3 + j] = currGrid[i][j];
