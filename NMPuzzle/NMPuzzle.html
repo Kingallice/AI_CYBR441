@@ -16,7 +16,12 @@
                 border: hidden;
                 background-color: #696969;
             }
-
+	    #back {
+		position: absolute;
+		text-align: center;
+		border: thick black solid;
+		border-radius: 0% 10% 30% 10%;
+	    }
             td {
                 padding: 20px;
                 background-color: white;
@@ -42,7 +47,7 @@
         </style>
     </head>
     <body onload="NewTable()">
-	<button href="../index.html">Go Back</button>
+	<div id="back" href="../index.html">Go Back</div>
         <h1 style="font-size:20pt;">n*m Puzzle</h1>
         <button onclick="NewTable()">New Table</button>
         <button onclick="runAI()">Run AI</button>
