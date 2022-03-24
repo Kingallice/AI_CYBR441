@@ -113,8 +113,9 @@ function calcWinner() {
 function getWinningMove(XorO) {
 	let count = 0; //if 2, there's a winning move.
 	let winningMove = false;
-	let winningLine = -1; // keeps track of winning row or column to iterate through to find winning move.
 	let emptyCell = null; // keeps track of the empty cell for a given line.
+
+    //rows
 	for (let i=0; i<board.length; i++) {
 		count = 0;
 		emptyCell = null;
@@ -130,12 +131,13 @@ function getWinningMove(XorO) {
 		}
 	}
 	
+    //columns
 	for (let i=0; i<board[0].length; i++) {
 		count = 0;
 		emptyCell = null;
 		for (let j=0; j<board.length; j++) {
 			if (board[j][i] == 0) {
-				emptyCell = board[i][j];
+				emptyCell = board[j][i];
 			}
 			if (board[j][i] == XorO) {
 				count++;
@@ -145,7 +147,32 @@ function getWinningMove(XorO) {
 		}
 	}
 	
-	
+    //check diagonals
+    count = 0;
+    for (let i=0; i<board.length; i++) {
+        if (board[i][i] == 0) {
+            emptyCell = board[i][i];
+        }
+        if (board[i][i] == XorO) {
+            count++;
+        }
+        if (count==2 && emptyCell != null) return emptyCell;
+        
+    }
+
+    count = 0;
+    for (let i=board.length-1; i>=0; i--) {
+        if (board[(board.length-1)-i][i] == 0) {
+            emptyCell = board[(board.length-1)-i][i];
+        }
+        if (board[(board.length-1)-i][i] == XorO) {
+            count++;
+        }
+        if (count==2 && emptyCell != null) return emptyCell;
+    }
+
+
+	return 0; //0 means there are no winning moves currently.
 }
 
 
