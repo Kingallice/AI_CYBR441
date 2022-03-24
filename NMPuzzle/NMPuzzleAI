@@ -1,0 +1,997 @@
+tableArr = [];
+
+async function runAI() {
+	document.getElementById("steps").value = 0;
+	running = true;
+
+	//smart solve
+	tableArr = TabletoArray(table);
+
+	let currRow = 0;
+
+	let rerun = true;
+	while (rerun) {
+		rerun = false;
+		let target = 0;
+		let counter = 0;
+
+		OpenTile = findTile();
+		let run = true;
+		while (target < (tableArr.length - 2) * tableArr[0].length) {
+			await sleep(window.speed);
+			target++;
+			//(correctPlace(number)[1] == tableArr[0].length-1)
+
+			//console.log(target);
+			//if ((tableArr.length-2 <= findTile(target)[0] <= tableArr.length-1) && (tableArr[0].length-3 <= findTile(target)[1] <= tableArr[0].length-1)) {
+			console.log("targ: " + target);
+			if (correctPlace(target)[0] >= tableArr.length - 2 && correctPlace(target)[1] > tableArr[0].length - 2) {
+				//console.log(tableArr.length);
+				//console.log(tableArr[0].length);
+
+				//console.log("skipping: " + target + ", correct place: " + correctPlace(target));
+				continue;
+			} else {//console.log("target: " + target + ", correct place: " + correctPlace(target));
+			}
+
+			if (correctPlace(target)[1] == tableArr[0].length - 1 || (correctPlace(target)[1] == 0 && correctPlace(target)[0] == tableArr.length - 1)) {
+				//console.log("cornering: " + target);
+				cornerL(target);
+				continue;
+			}
+
+			var temp;
+			/*
+for (let i=0; i<tableArr.length; i++) {
+  for (let j=0; j<tableArr[i].length; j++) {
+	if (tableArr[i][j] == target) {
+	  temp=[i,j];
+	  break;
+	}
+  }
+}
+*/
+
+			//if (temp == undefined) continue;
+			temp = findTile(target);
+			//console.log("temp: "+temp+", OpenTile: "+OpenTile);
+
+			//moveH(target, -1);
+
+			moveV(target, -1);
+
+			if (findTile(target)[0] > findTile()[0]) {
+				swap(3);
+			}
+
+			await sleep(window.speed);
+
+			OpenTile = findTile();
+			counter = 0;
+			temp = findTile(target);
+			while ((OpenTile[1] != temp[1] && OpenTile[1] + 1 != temp[1]) && counter < 50) {
+				await sleep(window.speed);
+				if (OpenTile[1] < temp[1]) {
+					swap(2);
+				} else if (OpenTile[1] > temp[1]) {
+					swap(4);
+				}
+				await sleep(window.speed);
+				counter++;
+				temp = findTile(target);
+				OpenTile = findTile();
+			}
+
+			temp = findTile(target);
+			OpenTile = findTile();
+			//console.log(temp);
+
+			if (temp[1] > OpenTile[1]) {
+				while (findTile(target)[1] != findTile()[1]) {
+					rotate(1);
+				}
+			}
+
+			//await sleep(2000);
+			temp = findTile(target);
+			OpenTile = findTile();
+			/*
+if (temp[1]==OpenTile[1]+1 && temp[0] == OpenTile[0]) {
+  console.log("test1");
+	rotate(1);
+  rotate(1);
+} else if (OpenTile[0]<tableArr[0].length-1 && temp[0] != OpenTile[0] || (temp[1] == OpenTile[1]-1) && ((temp[0]-1!=OpenTile[0] && temp[0]+1!=OpenTile[0]) && temp[1] == OpenTile[1])) {
+  //await sleep(5000);
+  console.log("test2");
+	rotate(1);
+}
+temp = findTile(target);
+OpenTile = findTile();
+if (temp[1]==OpenTile[1]+1 && temp[0] == OpenTile[0]) {
+	console.log("TO ITS SIDE!");
+}
+if (temp[1]==OpenTile[1]+1 && temp[0] == OpenTile[0]) {
+  console.log("test3");
+	rotate(1);
+  rotate(1);
+//await sleep(5000);
+}*/
+
+			if (findTile(target)[1] < findTile()[1]) {
+				swap(4);
+			}
+			//moveH(target);
+			rebuildTable(tableArr);
+			//console.log("temp: "+temp+", OpenTile: "+OpenTile);
+			//break;
+			//            indexArr[Math.floor(tempTableArr[x][y]/lengthy)][tempTableArr[x][y]%lengthy] = [y, x];
+
+			//while not in the right spot, move target.
+			//figure out code for lines first.
+			//needs to check for corners as well.
+			counter = 0;
+
+			if ((findTile(target)[1] == findTile()[1] && findTile(target)[0] == findTile()[0] + 1))
+				continue;
+			while (/*findTile(target)[0]!=Math.floor( target/tableArr.length) && */
+			(findTile(target)[1] != (target - 1) % tableArr[0].length) && counter < 50) {
+				if (findTile(target)[1] < (target - 1) % tableArr[0].length) {
+					swap(2);
+					rotate(2);
+				}
+				if (findTile(target)[1] == (target - 1) % tableArr[0].length)
+					break;
+
+				if (findTile(target)[1] >= (target - 1) % tableArr[0].length) {
+
+					if (findTile(target)[1] == findTile()[1] + 1 && findTile(target)[0] == findTile()[0] - 1) {
+						rotate(1);
+					}
+					swap(4);
+					rotate(1);
+				}
+
+				counter++;
+			}
+
+			while (findTile(target)[0] != Math.floor(target / (tableArr[0].length))) {
+				rotate(1);
+				rotate(1);
+				swap(1);
+				rotate(1);
+				rotate(1);
+			}
+
+			OpenTile = findTile();
+			temp = findTile(target);
+		}
+
+		//move empty cell to right corner
+		while (findTile()[0] < tableArr.length - 1) {
+			swap(3);
+		}
+		while (findTile()[1] < tableArr[0].length - 1) {
+			swap(2);
+		}
+
+		if (target < (tableArr.length - 2) * (tableArr[0].length - 3)) {
+			rerun = true;
+		}
+	}
+
+	target = tableArr[0].length * (tableArr.length - 1) + 1;
+	for (let a = 0; a < tableArr[0].length - 3; a++) {
+		cornerB(target);
+
+		//skips bottom 
+		target++;
+	}
+
+	//move empty cell to right
+	//while (findTile()[0]<tableArr.length-1) {
+	//  swap(3);
+	//}
+	while (true) {
+		if (findTile()[1] >= tableArr[0].length - 1)
+			break;
+		swap(2);
+		console.log("swappin\'");
+	}
+	console.log(findTile()[1]);
+	console.log(tableArr[0].length - 1);
+	console.log("End!");
+
+	//Pass to brute force solver.
+	let sx = tableArr.length - 2;
+	let ex = tableArr.length - 1;
+	let sy = tableArr[0].length - 3;
+	let ey = tableArr[0].length - 1;
+	console.log(tableArr.slice(sx, ex + 1).map(el=>el.slice(sy, ey + 1)));
+	solve2By3(tableArr.slice(sx, ex + 1).map(el=>el.slice(sy, ey + 1)), tableArr[0].length, tableArr.length);
+
+	running = false;
+	return;
+}
+
+//function 1: moveSpace(target, direction) //direction means where the 
+//empty cell will head to respective of the target cell. Above target 
+//cell: 1, right: 2, below: 3, left: 4.
+//approachDir means how the program should move aroudn the target cell (clockwise or counter-clockwise, 1 and -1 respectively)
+
+//function 1 moves the empty space (0) into correct place to prepare for moving a given number to the right location.
+
+function moveSpace(target, direction, approachDir) {
+	tableArr = TabletoArray();
+	OpenTile = findTile();
+	SelectTile = findTile(number);
+	if (OpenTile[1] < SelectTile[1]) {
+		while (OpenTile[1] + Math.abs((approachDir + 1) % 4 - 2) - 1 != SelectTile[1] && OpenTile[1] <= SelectTile[1] + 1 && OpenTile[1] < tableArr[0].length - 1) {
+			swap(2);
+
+			OpenTile = findTile();
+			SelectTile = findTile(number);
+		}
+		//console.log(temp, OpenTile, SelectTile);
+
+	} else if (OpenTile[1] > SelectTile[1]) {
+		while (OpenTile[1] + Math.abs((approachDir + 1) % 4 - 2) - 1 != SelectTile[1] && OpenTile[1] >= SelectTile[1] - 1) {
+			swap(4);
+
+			OpenTile = findTile();
+			SelectTile = findTile(number);
+			//console.log(temp, OpenTile, SelectTile);
+		}
+	}
+
+	//tableArr = TabletoArray();
+	//OpenTile = findTile();
+	//SelectTile = findTile(number);
+	if (OpenTile[0] < SelectTile[0]) {
+		while (OpenTile[0] + Math.abs((approachDir + 2) % 4 - 2) - 1 != SelectTile[0] && OpenTile[0] <= SelectTile[0] + 1 && OpenTile[0] < tableArr.length - 1) {
+			swap(3);
+
+			OpenTile = findTile();
+			SelectTile = findTile(number);
+			//console.log(temp, OpenTile, SelectTile);
+		}
+	} else if (OpenTile[0] > SelectTile[0]) {
+		while (OpenTile[0] + Math.abs((approachDir + 2) % 4 - 2) - 1 != SelectTile[0] && OpenTile[0] >= SelectTile[0] - 1) {
+			swap(1);
+
+			OpenTile = findTile();
+			SelectTile = findTile(number);
+			//console.log(temp, OpenTile, SelectTile);
+		}
+	}
+
+	rebuildTable(arrTable);
+}
+
+//function 2: 
+
+//function 2 moves the target cell left, right, up or down (Noah already has functions for this, might as well use them).
+
+//function 3:
+
+//function 3 handles applying function 1 and 2 to solve for lines.
+
+//1 -> Up
+//2 -> Right
+//3 -> Down
+//4 -> Left
+var speed = 1000;
+function sleep(ms) {
+	if (!window.checked)
+		speed = 50;
+	else
+		speed = 1000;
+	return new Promise(resolve=>setTimeout(resolve, ms));
+	return false;
+}
+
+function swap(direction) {
+	OpenTile = findTile();
+	if (OpenTile[0] + Math.abs((direction + 1) % 4 - 2) - 1 > tableArr.length - 1 || OpenTile[0] + Math.abs((direction + 1) % 4 - 2) - 1 < 0 || OpenTile[1] + Math.abs((direction + 2) % 4 - 2) - 1 > tableArr[0].length - 1 || OpenTile[1] + Math.abs((direction + 2) % 4 - 2) - 1 < 0) {
+		return;
+	}
+	temp = tableArr[OpenTile[0] + Math.abs((direction + 1) % 4 - 2) - 1][OpenTile[1] + Math.abs((direction + 2) % 4 - 2) - 1];
+	tableArr[OpenTile[0] + Math.abs((direction + 1) % 4 - 2) - 1][OpenTile[1] + Math.abs((direction + 2) % 4 - 2) - 1] = tableArr[OpenTile[0]][OpenTile[1]];
+	tableArr[OpenTile[0]][OpenTile[1]] = temp;
+	//sleep(speed);
+	rebuildTable(arrTable);
+	document.getElementById("steps").value++;
+}
+
+function swapTiles(Tile1, Tile2) {
+	temp = tableArr[Tile1[0]][Tile1[1]];
+	tableArr[Tile1[0]][Tile1[1]] = tableArr[Tile2[0]][Tile2[1]];
+	tableArr[Tile2[0]][Tile2[1]] = temp;
+}
+
+function findTile(number=0) {
+	arr = []
+	tableArr.forEach(function(x, i) {
+		if (x.includes(number)) {
+			arr = [i, x.indexOf(number)];
+		}
+	});
+	return arr;
+}
+
+function correctPlace(number=1) {
+	for (let i = 0; i < tableArr.length; i++) {
+		for (let j = 0; j < tableArr[0].length; j++) {
+			if (j + 1 + (i * (tableArr[0].length)) == number) {
+				return [i, j];
+			}
+
+			/*if (number%tableArr[0].length == j && Math.floor(number/table[0].length]) == i) {
+  return [i,j];
+}*/
+		}
+	}
+}
+//moves the nearby tile up or down if dir != 1
+
+function moveRight(dir=1) {
+	moveLeft(-dir);
+}
+
+function moveDown(dir=1) {
+	moveUp(-dir);
+}
+
+function moveUp(dir=1) {
+	tableArr = TabletoArray();
+	OpenTile = findTile();
+	for (let i = 0; i < 4; i++) {
+		if (i == 0) {
+			up = false;
+			if (0 <= OpenTile[1] && OpenTile[1] < tableArr[0].length - 1) {
+				temp = tableArr[OpenTile[0]][OpenTile[1] + 1];
+				tableArr[OpenTile[0]][OpenTile[1] + 1] = tableArr[OpenTile[0]][OpenTile[1]]
+				tableArr[OpenTile[0]][OpenTile[1]] = temp;
+			} else if (OpenTile[1] < tableArr[0].length) {
+				temp = tableArr[OpenTile[0]][OpenTile[1] - 1];
+				tableArr[OpenTile[0]][OpenTile[1] - 1] = tableArr[OpenTile[0]][OpenTile[1]]
+				tableArr[OpenTile[0]][OpenTile[1]] = temp;
+				up = true;
+			}
+		} else if (i <= 2) {
+			if (dir == 1) {
+				temp = tableArr[OpenTile[0] - 1][OpenTile[1]];
+				tableArr[OpenTile[0] - 1][OpenTile[1]] = tableArr[OpenTile[0]][OpenTile[1]]
+				tableArr[OpenTile[0]][OpenTile[1]] = temp;
+			} else {
+				temp = tableArr[OpenTile[0] + 1][OpenTile[1]];
+				tableArr[OpenTile[0] + 1][OpenTile[1]] = tableArr[OpenTile[0]][OpenTile[1]]
+				tableArr[OpenTile[0]][OpenTile[1]] = temp;
+			}
+		} else {
+			if (up) {
+				temp = tableArr[OpenTile[0]][OpenTile[1] + 1];
+				tableArr[OpenTile[0]][OpenTile[1] + 1] = tableArr[OpenTile[0]][OpenTile[1]]
+				tableArr[OpenTile[0]][OpenTile[1]] = temp;
+			} else {
+				temp = tableArr[OpenTile[0]][OpenTile[1] - 1];
+				tableArr[OpenTile[0]][OpenTile[1] - 1] = tableArr[OpenTile[0]][OpenTile[1]]
+				tableArr[OpenTile[0]][OpenTile[1]] = temp;
+			}
+		}
+		OpenTile = findTile();
+	}
+	if (dir == 1) {
+		temp = tableArr[OpenTile[0] + 1][OpenTile[1]];
+		tableArr[OpenTile[0] + 1][OpenTile[1]] = tableArr[OpenTile[0]][OpenTile[1]]
+		tableArr[OpenTile[0]][OpenTile[1]] = temp;
+	} else {
+		temp = tableArr[OpenTile[0] - 1][OpenTile[1]];
+		tableArr[OpenTile[0] - 1][OpenTile[1]] = tableArr[OpenTile[0]][OpenTile[1]]
+		tableArr[OpenTile[0]][OpenTile[1]] = temp;
+	}
+	rebuildTable(arrTable);
+}
+//Moves the nearby tile left or right if dir != 1
+function moveLeft(dir=1) {
+	tableArr = TabletoArray();
+	OpenTile = findTile();
+	console.log(OpenTile);
+	//if (0 > OpenTile[0]+dir || OpenTile[0]+dir > tableArr.length-1) {
+	//	return;
+	//}
+	for (let i = 0; i < 4; i++) {
+		if (i == 0) {
+			up = false;
+			if (0 <= OpenTile[0] && OpenTile[0] < tableArr.length - 1) {
+				temp = tableArr[OpenTile[0] + 1][OpenTile[1]];
+				tableArr[OpenTile[0] + 1][OpenTile[1]] = tableArr[OpenTile[0]][OpenTile[1]]
+				tableArr[OpenTile[0]][OpenTile[1]] = temp;
+			} else if (OpenTile[0] < tableArr.length - 1) {
+				temp = tableArr[OpenTile[0] - 1][OpenTile[1]];
+				tableArr[OpenTile[0] - 1][OpenTile[1]] = tableArr[OpenTile[0]][OpenTile[1]]
+				tableArr[OpenTile[0]][OpenTile[1]] = temp;
+				up = true;
+			}
+		} else if (i <= 2) {
+			if (dir == 1) {
+				temp = tableArr[OpenTile[0]][OpenTile[1] - 1];
+				tableArr[OpenTile[0]][OpenTile[1] - 1] = tableArr[OpenTile[0]][OpenTile[1]]
+				tableArr[OpenTile[0]][OpenTile[1]] = temp;
+			} else {
+				temp = tableArr[OpenTile[0]][OpenTile[1] + 1];
+				tableArr[OpenTile[0]][OpenTile[1] + 1] = tableArr[OpenTile[0]][OpenTile[1]]
+				tableArr[OpenTile[0]][OpenTile[1]] = temp;
+			}
+		} else {
+			if (up) {
+				temp = tableArr[OpenTile[0] + 1][OpenTile[1]];
+				tableArr[OpenTile[0] + 1][OpenTile[1]] = tableArr[OpenTile[0]][OpenTile[1]]
+				tableArr[OpenTile[0]][OpenTile[1]] = temp;
+			} else {
+				temp = tableArr[OpenTile[0] - 1][OpenTile[1]];
+				tableArr[OpenTile[0] - 1][OpenTile[1]] = tableArr[OpenTile[0]][OpenTile[1]]
+				tableArr[OpenTile[0]][OpenTile[1]] = temp;
+			}
+		}
+		OpenTile = findTile();
+	}
+	if (dir == 1) {
+		temp = tableArr[OpenTile[0]][OpenTile[1] + 1];
+		tableArr[OpenTile[0]][OpenTile[1] + 1] = tableArr[OpenTile[0]][OpenTile[1]]
+		tableArr[OpenTile[0]][OpenTile[1]] = temp;
+	} else {
+		temp = tableArr[OpenTile[0]][OpenTile[1] - 1];
+		tableArr[OpenTile[0]][OpenTile[1] - 1] = tableArr[OpenTile[0]][OpenTile[1]]
+		tableArr[OpenTile[0]][OpenTile[1]] = temp;
+	}
+	rebuildTable(arrTable);
+}
+//Rotates (1 == clockwise/ -1 == counter-clockwise)
+function rotate(dir=1) {
+	tableArr = TabletoArray();
+	dir = dir % 4;
+	switch (dir) {
+	case 3:
+		swap(3);
+		swap(4);
+		swap(1);
+		swap(2);
+		break;
+	case 1:
+		swap(1);
+		swap(2);
+		swap(3);
+		swap(4);
+		break;
+	case 2:
+		swap(1);
+		swap(4);
+		swap(3);
+		swap(2);
+		break;
+	case 0:
+		swap(3);
+		swap(2);
+		swap(1);
+		swap(4);
+		break;
+	}
+}
+
+//Solves the corner
+function cornerL(number=3) {
+	tableArr = TabletoArray();
+	c = correctPlace(number);
+	OT = findTile();
+	//if(correctPlace(number)[1] == tableArr.length-1){
+
+	while ((a = findTile()[0]) != (b = findTile(number - 1)[0] + 1)) {
+		if (a < b)
+			swap(3);
+		else
+			swap(1);
+	}
+	while ((a = findTile()[1]) != (b = findTile(number - 1)[1])) {
+		if (a < b)
+			swap(2);
+		else
+			swap(4);
+	}
+	if (findTile(number)[0] == correctPlace(number)[0] + 1 && findTile(number)[1] == tableArr[0].length - 1 && findTile(number - 1)[0] - 1 != correctPlace(number - 1)[0]) {
+		rotate(4);
+	}
+	if (findTile(number - 1)[0] - 1 != correctPlace(number - 1)[0]) {
+		rotate();
+		rotate();
+	}
+	if (findTile(number)[0] - 1 == correctPlace(number)[0]) {
+		moveV(number);
+		while ((a = findTile()[1]) != (b = findTile(number)[1] - 1)) {
+			if (a < b + 1)
+				swap(2);
+			else
+				swap(4);
+		}
+	}
+	while ((a = findTile()[1]) != (b = findTile(number)[1]) && findTile()[0] != findTile(number)[0]) {
+		if (a < b)
+			swap(2);
+		else
+			swap(4);
+	}
+	if (findTile()[1] > 0 && findTile()[1] == findTile(number)[1]) {
+		swap(4);
+		while (findTile(number)[0] != findTile()[0])
+			swap(3);
+	} else {
+		swap(2);
+		while (findTile(number)[0] != findTile()[0])
+			swap(3);
+		swap(4);
+	}
+	while (findTile(number)[1] < tableArr[0].length - 1) {
+		if (findTile(number)[0] == tableArr.length - 1) {
+			swap(1);
+			swap(2);
+			swap(2);
+			swap(3);
+			swap(4);
+		} else {
+			swap(3);
+			swap(2);
+			swap(2);
+			swap(1);
+			swap(4);
+		}
+	}
+	swap(1);
+	swap(2);
+	swap(3);
+	while (findTile(number)[0] > correctPlace(number)[0]) {
+		if (findTile()[1] == tableArr[0].length - 1) {
+			swap(4);
+			swap(1);
+			swap(1);
+			swap(2);
+			swap(3);
+		} else {
+			swap(2);
+			swap(1);
+			swap(1);
+			swap(4);
+			swap(3);
+		}
+		//moveUp();
+	}
+	if (findTile()[0] < tableArr.length - 1) {
+		swap(3);
+	}
+}
+function cornerB(number) {
+	tableArr = TabletoArray();
+	tempHERE = tableArr;
+	if (findTile(number)[1] == correctPlace(number)[1] && findTile(number)[0] == correctPlace(number)[0] - 1) {
+		rotate(1);
+	}
+	if (findTile(number)[1] != correctPlace(number)[1] || findTile(number)[0] != correctPlace(number)[0]) {
+		if (findTile(number)[1] == findTile()[1] && findTile()[1] > 0) {
+			swap(4);
+		}
+		while ((a = findTile(number)[0]) != (b = findTile()[0]) && findTile(number)[1] != findTile()[1]) {
+			if (a < b)
+				swap(1);
+			else
+				swap(3);
+		}
+		while ((a = findTile(number)[1] - 1) != (b = findTile()[1])) {
+			if (a < b)
+				swap(4);
+			else
+				swap(2);
+		}
+		swap(2);
+		while (findTile(number)[1] > correctPlace(number)[1]) {
+			if (findTile(number)[0] == tableArr.length - 1) {
+				swap(1);
+				swap(4);
+				swap(4);
+				swap(3);
+				swap(2);
+			} else {
+				swap(3);
+				swap(4);
+				swap(4);
+				swap(1);
+				swap(2);
+			}
+		}
+	}
+	while ((a = findTile(number - tableArr[0].length)[0]) != (b = findTile()[0]) && findTile(number - tableArr[0].length)[1] != findTile()[1]) {
+		if (a < b)
+			swap(1);
+		else
+			swap(3);
+	}
+	while ((a = findTile(number - tableArr[0].length)[1] - 1) != (b = findTile()[1])) {
+		if (a < b)
+			swap(4);
+		else
+			swap(2);
+	}
+	if (findTile(number - tableArr[0].length)[1] - 1 == findTile()[1]) {
+		if (findTile(number - tableArr[0].length)[0] > findTile()[0]) {
+			swap(3);
+		} else if (findTile(number - tableArr[0].length)[0] != findTile()[0])
+			swap(1);
+	}
+	swap(2);
+	while (findTile(number - tableArr[0].length)[1] > correctPlace(number - tableArr[0].length)[1]) {
+		if (findTile(number - tableArr[0].length)[0] == tableArr.length - 1) {
+			swap(1);
+			swap(4);
+			swap(4);
+			swap(3);
+			swap(2);
+		} else {
+			swap(3);
+			swap(4);
+			swap(4);
+			swap(1);
+			swap(2);
+		}
+	}
+	if (findTile()[0] == findTile(number - tableArr[0].length)[0] && findTile()[0] == tableArr.length) {
+		swap(1);
+		rotate(3);
+	}
+	if (findTile(number)[0] - 1 == findTile()[0] && findTile(number)[1] == findTile()[1]) {
+		rotate(4);
+		rotate(4);
+		rotate(3);
+		rotate(4);
+		rotate(3);
+		rotate(3);
+	}
+	if (findTile(number)[0] == findTile()[0] - 1 && findTile(number)[1] == findTile()[1] && findTile(number - tableArr[0].length)[0] == findTile()[0] && findTile(number - tableArr[0].length)[1] == findTile()[1] - 1)
+		rotate(2);
+	if (findTile()[1] - 1 == findTile(number)[1] && findTile()[1] - 1 == findTile(number - tableArr[0].length)[1] && findTile(number - tableArr[0].length)[0] > findTile(number)[0]) {
+		rotate(2);
+		rotate(1);
+		rotate(2);
+		rotate(2);
+		swap(2);
+		swap(1);
+		swap(4);
+		rotate(3);
+		rotate(3);
+	}
+	if (findTile()[1] + 1 == findTile(number)[1] && findTile()[1] + 1 == findTile(number - tableArr[0].length)[1]) {
+		rotate(1);
+		swap(2);
+		rotate(1);
+		rotate(2);
+		swap(2);
+		swap(1);
+		swap(4);
+		swap(4);
+		swap(3);
+		swap(2);
+	}
+	rebuildTable(tableArr);
+}
+//seeks out the horizontal location the tile passed
+//dir == 0 middle / dir == -1 left / dir == 1 right
+
+function moveH(number=1, dir=0) {
+	tableArr = TabletoArray();
+	OpenTile = findTile();
+	SelectTile = findTile(number);
+	if (OpenTile[1] + dir < SelectTile[1]) {
+		while (OpenTile[1] + dir != SelectTile[1] && OpenTile[1] <= SelectTile[1] + 1 && OpenTile[1] < tableArr[0].length - 1) {
+			temp = tableArr[OpenTile[0]][OpenTile[1] + 1];
+			tableArr[OpenTile[0]][OpenTile[1] + 1] = tableArr[OpenTile[0]][OpenTile[1]];
+			tableArr[OpenTile[0]][OpenTile[1]] = temp;
+
+			OpenTile = findTile();
+			SelectTile = findTile(number);
+		}
+		//console.log(temp, OpenTile, SelectTile);
+
+	} else if (OpenTile[1] - dir > SelectTile[1]) {
+		while (OpenTile[1] - dir != SelectTile[1] && OpenTile[1] >= SelectTile[1] - 1) {
+			temp = tableArr[OpenTile[0]][OpenTile[1] - 1];
+			tableArr[OpenTile[0]][OpenTile[1] - 1] = tableArr[OpenTile[0]][OpenTile[1]]
+			tableArr[OpenTile[0]][OpenTile[1]] = temp;
+
+			OpenTile = findTile();
+			SelectTile = findTile(number);
+			//console.log(temp, OpenTile, SelectTile);
+		}
+	}
+	rebuildTable(arrTable);
+}
+//Seeks out vertical location of the passed tile
+//dir == 0 middle / dir == -1 down / dir == 1 up
+function moveV(number=1, dir=0) {
+	tableArr = TabletoArray();
+	OpenTile = findTile();
+	SelectTile = findTile(number);
+	if (OpenTile[0] + dir < SelectTile[0]) {
+		while (OpenTile[0] + dir != SelectTile[0] && OpenTile[0] <= SelectTile[0] + 1 && OpenTile[0] < tableArr.length - 1) {
+			temp = tableArr[OpenTile[0] + 1][OpenTile[1]];
+			tableArr[OpenTile[0] + 1][OpenTile[1]] = tableArr[OpenTile[0]][OpenTile[1]]
+			tableArr[OpenTile[0]][OpenTile[1]] = temp;
+
+			OpenTile = findTile();
+			SelectTile = findTile(number);
+			//console.log(temp, OpenTile, SelectTile);
+		}
+	} else if (OpenTile[0] + dir > SelectTile[0]) {
+		while (OpenTile[0] + dir != SelectTile[0] && OpenTile[0] >= SelectTile[0] - 1) {
+			temp = tableArr[OpenTile[0] - 1][OpenTile[1]];
+			tableArr[OpenTile[0] - 1][OpenTile[1]] = tableArr[OpenTile[0]][OpenTile[1]]
+			tableArr[OpenTile[0]][OpenTile[1]] = temp;
+
+			OpenTile = findTile();
+			SelectTile = findTile(number);
+			//console.log(temp, OpenTile, SelectTile);
+		}
+	}
+	rebuildTable(arrTable);
+}
+var startGrid = [[4, 0, 3], [2, 5, 1]];
+
+var currGrid = [...startGrid];
+
+var t;
+
+//leave goalGrid alone.
+var goalGrid = [[1, 2, 3], [4, 5, 0]];
+
+function solve2By3(grid, sizex=3, sizey=2) {
+	clearInterval(t);
+	startGrid = grid;
+	currGrid = [...startGrid];
+
+	let maxValue = sizex * sizey - 1;
+	let diff = goalGrid[1][1] - maxValue;
+	for (let i = 0; i < goalGrid.length; i++) {
+		for (let j = 0; j < goalGrid[i].length; j++) {
+			if (goalGrid[i][j] == 0)
+				continue;
+			goalGrid[i][j] -= diff;
+		}
+	}
+
+	for (let i = 0; i < goalGrid[0].length; i++) {
+		goalGrid[0][i] -= sizex - 3;
+	}
+
+	console.log(goalGrid);
+
+	t = setInterval(function() {
+		solver();
+	}, 0);
+}
+
+var possibleMoves;
+
+function DETERMINEPOSSIBLEMOVES(cells) {
+	let possibleMoves = [];
+	let zeroCell = [];
+
+	for (let i = 0; i < cells.length; i++) {
+		for (let j = 0; j < cells[i].length; j++) {
+			if (cells[i][j] == 0)
+				zeroCell = [i, j];
+		}
+	}
+	let i = zeroCell[0];
+	let j = zeroCell[1];
+
+	if (i + 1 < cells.length) {
+		possibleMoves.push([[i, j], [i + 1, j]]);
+	}
+	if (i - 1 >= 0) {
+		possibleMoves.push([[i, j], [i - 1, j]]);
+	}
+	if (j - 1 >= 0) {
+		possibleMoves.push([[i, j], [i, j - 1]]);
+	}
+	if (j + 1 < cells[i].length) {
+		possibleMoves.push([[i, j], [i, j + 1]]);
+	}
+	//console.log(possibleMoves);
+	return possibleMoves;
+}
+
+var maxDepth = 12;
+var trueMaxDepth = 8;
+var tmpGrids = [];
+var bestMove = [];
+var bestHScore = 0;
+
+function makeMove() {
+	moves = DETERMINEPOSSIBLEMOVES(currGrid);
+	nextMove = [];
+	moveSequence = [];
+	hscores = [];
+	for (let i = 0; i < moves.length; i++) {
+		hscores.push(0);
+	}
+	bestHScore = 0;
+	bestMove = moves[0];
+	tmpGrids = [];
+	var move1 = [...bestMove];
+	moveSequence = [];
+	SEARCH(moves, 0);
+	doMove(bestMove);
+	document.getElementById('steps').value++;
+}
+
+function SEARCH(moves, depth) {
+	for (let i = 0; i < moves.length; i++) {
+		moveSequence.push(moves[i]);
+		tmpGrids.push(currGrid);
+		doMove(moves[i]);
+		depth++;
+		//^looking at state after doMove()
+
+		let matched = false;
+		if (depth == 0) {
+			let length = tmpGrids.length - 1;
+			for (let j = 0; j < length; j++) {
+				matched = true;
+
+				for (let k = 0; k < moves.length; k++) {
+					for (let l = 0; l < moves[k].length; l++) {
+						if (currGrid[k][l] != tmpGrids[j][k][l]) {
+							matched = false;
+							break;
+						}
+					}
+					if (!matched)
+						break;
+				}
+
+				if (matched) {
+					//console.log(tmpGrids.length);
+					break;
+				}
+			}
+		}
+		if (!matched) {
+			if (depth < maxDepth) {
+				SEARCH(DETERMINEPOSSIBLEMOVES(currGrid), depth);
+			}
+
+			/*
+  let indexArr = [];
+  let indexArr2 = [];
+  let lengthx = currGrid.length;
+  let lengthy;
+  for (let x = 0; x < lengthx; x++) {
+	lengthy = currGrid[x].length;
+	indexArr.push([]);
+	indexArr2.push([]);
+	for (let y = 0; y < lengthy; y++) {
+		indexArr[x].push([]);
+		indexArr2[x].push([]);
+	}
+  }
+  for (let x = 0; x < lengthx; x++) {
+	indexArr.push([]);
+	lengthy = currGrid[x].length;
+	for (let y = 0; y < lengthy; y++) {
+	  indexArr[x].push([]);
+	  indexArr[Math.floor(currGrid[x][y]/lengthx)]
+	  [currGrid[x][y]%lengthx] = [x, y];
+	}
+  }
+  for (let x = 0; x < lengthx; x++) {
+	indexArr2.push([]);
+	lengthy = currGrid[x].length;
+	for (let y = 0; y < lengthy; y++) {
+	  indexArr2[x].push([0,0]);
+	  indexArr2[Math.floor(currGrid[x][y]/lengthx)]
+	  [currGrid[x][y]%lengthx][0] = x;
+	  indexArr2[Math.floor(currGrid[x][y]/lengthx)]
+	  [currGrid[x][y]%lengthx][1] = y
+	}
+  }
+  let distPenalty = [];
+  for (let x = 0; x < currGrid.length; x++) {
+	distPenalty.push([]);
+	for (let y = 0; y < currGrid[x].length; y++) {
+	  distPenalty[x].push(0);
+	  distPenalty[x][y] = -Math.abs(indexArr2[x][y][0]-indexArr[x][y][0])-Math.abs(indexArr2[x][y][0]-indexArr[x][y][1]);
+	}
+  }
+  let distSum = 0;
+  for (let x = 0; x < currGrid.length; x++) {
+	for (let y = 0; y < currGrid[x].length; y++) {
+	  distSum+=distPenalty[x][y];
+	}
+  }
+  */
+			hscores[i] = calcHScores(currGrid) + (Math.random() - 0.5) * 100;
+
+			//-distPenalty/(lengthx*lengthy*100);
+			if (hscores[i] >= bestHScore) {
+				bestHScore = hscores[i];
+				//console.log(bestHScore);
+				bestMove = moveSequence[0];
+				//console.log(bestMove);
+				//if (bestHScore>3) console.log(bestMove);
+			}
+		}
+		undoMove(moves[i]);
+		moveSequence.pop();
+
+	}
+}
+
+function doMove(move) {
+	//console.log(currGrid);
+	let temp = currGrid[move[0][0]][move[0][1]];
+	currGrid[move[0][0]][move[0][1]] = currGrid[move[1][0]][move[1][1]];
+	currGrid[move[1][0]][move[1][1]] = temp;
+	//document.getElementById('steps').value++;
+	//console.log(currGrid);
+
+}
+function undoMove(move) {
+	let temp = currGrid[move[1][0]][move[1][1]];
+	currGrid[move[1][0]][move[1][1]] = currGrid[move[0][0]][move[0][1]];
+	currGrid[move[0][0]][move[0][1]] = temp;
+}
+
+function calcHScores(grid) {
+	var score = 0;
+	for (let i = 0; i < grid.length; i++) {
+		for (let j = 0; j < grid[i].length; j++) {
+			if (grid[i][j] == goalGrid[i][j])
+				score++;
+		}
+	}
+	return score;
+}
+
+class grid {
+	constructor(cells) {
+		this.cells = [...cells];
+	}
+
+	get getPossibleMoves() {
+
+		return null;
+	}
+}
+
+let counter = 0;
+let SPEED = 1000;
+let STEPS = 100000;
+console.log("Starting Grid: " + currGrid);
+console.log("Target Grid: " + goalGrid);
+
+function solver() {
+	counter++;
+	if (counter > STEPS || calcHScores(currGrid) >= currGrid.length * currGrid[0].length - 1) {
+		counter = 0;
+		console.log("clearing.");
+		console.log(calcHScores(currGrid));
+		console.log("Ending Grid: " + currGrid);
+		for (let i = 0; i < 2; i++) {
+			for (let j = 0; j < 3; j++) {
+				tableArr[tableArr.length - 2 + i][tableArr[0].length - 3 + j] = currGrid[i][j];
+			}
+		}
+		rebuildTable(tableArr);
+		clearInterval(t);
+		goalGrid = [[1, 2, 3], [4, 5, 0]];
+	}
+	makeMove();
+
+	//console.log(currGrid)
+
+}
