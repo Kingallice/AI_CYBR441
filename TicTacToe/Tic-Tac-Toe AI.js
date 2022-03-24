@@ -16,12 +16,29 @@ var board = [
 var lastMove = [];
 
 function think() {
+    var move = 0;
 	//Do winning move if possible.
-	
+	move = getWinningMove(AIchar);
+    if (move!=0) {doMove(move); return;}
+
 	//Block instant opponent wins next move.
+	move = getWinningMove(playerChar);
+    if (move!=0) {doMove(move); return;}
 	
 	//Default to mirroring move of opponent.	
-	
+    var moves = possibleMoves();
+
+    //returns random move for now!
+    return moves[Math.round(Math.random())*(moves.length-1)];
+}
+
+function possibleMoves() {
+    let pMoves = [];
+    for (let i=0; i<board.length; i++) {
+        for (let j=0; j<board[i].length; j++) {
+            if (board[i][j] == 0) pMoves.push(board[i][j]);
+        }
+    }
 }
 
 function doMove(move) {
