@@ -27,11 +27,11 @@ checkbox.addEventListener('change', function() {
 	if (this.checked) {
 		//window.checked = true;
 		window.speed = 1000;
-		console.log("Checkbox is checked..");
+		//console.log("Checkbox is checked..");
 	} else {
 		window.speed = 0;
 		//window.checked = false;
-		console.log("Checkbox is not checked..");
+		//console.log("Checkbox is not checked..");
 	}
 });
 
@@ -185,15 +185,15 @@ tempTABLE = [];
 //Returns true if there are an even number of swaps required/otherwise returns false
 function checkPuzzle() {
 	tempTABLE = TabletoArray();
-	console.log(tempTABLE);
+	//console.log(tempTABLE);
 	swaps = 0;
 	while (tfindTile()[0] < tempTABLE.length - 1) {
 		tswap(3);
-		console.log(tempTABLE);
+		//console.log(tempTABLE);
 	}
 	while (tfindTile()[1] < tempTABLE[0].length - 1) {
 		tswap(2);
-		console.log(tempTABLE);
+		//console.log(tempTABLE);
 	}
 	for (let i = 1; i < tempTABLE[0].length * tempTABLE.length; i++) {
 		if (tcorrectPlace(i)[0] != tfindTile(i)[0] || tcorrectPlace(i)[1] != tfindTile(i)[1]) {
