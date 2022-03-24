@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tic Tac Toe</title>
+        <style>
+            html {
+                background-color: #484848;
+            }
+
+            body {
+                text-align: center;
+            }
+            td {
+                padding: 20px;
+                background-color: white;
+                text-align: center;
+                border-color: black;
+                border: outset 10px;
+                width: 50px;
+                height: 50px;
+                font-size: 35pt;
+            }
+            table {
+                border: thick red solid;
+                background-color: black;
+                margin-left: auto;
+                margin-right: auto;
+            }
+			#win {
+				text-align: center;
+				position: absolute;
+				left: 0;
+				right: 0;
+				margin-left: auto;
+				margin-right: auto;
+				transform: translate(0px,70px);
+				width: 350px;
+				/*height: 375px;*/
+				background-color: white;
+				/*opacity: 90%;*/
+				border: thick black solid;
+				border-radius: 30px;
+			}
+            button {
+                font-size: 18pt;
+                margin: 10px;
+            }
+        </style>
+    </head>
+    <body onload="createTable()">
+        <h1 style="font-size:20pt;">Tic Tac Toe</h1>
+        <h3><button onclick="createTable()">New Game</button>
+		AI<input type="checkbox" id='check'></h3>
+		<div id='win' hidden><h1>Player X Wins</h1></div>
+        <table id='gameTable'></table>
+        <div style="padding:25px;">Tic Tac Toe & AI - By: Noah Mosel + Blake Meyer</div>
+		<!--Script for all the basic functions of the TicTacToe Game-->
+		<script src=TicTacToeFront.js></script>
+		<script src=TicTacToeAI.js></script>
+	</body>
+</html>
