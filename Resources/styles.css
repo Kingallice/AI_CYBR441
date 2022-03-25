@@ -33,8 +33,6 @@ p {
 	border: thick solid black;
 	margin: 10px auto 10px auto;
 	width: 60%;
-	height: 0;
 	padding: 10px;
-	padding-bottom: 30%;
 	background-color: lightgray;
 }
