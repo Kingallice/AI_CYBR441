@@ -1,0 +1,40 @@
+body {
+	text-align: center;
+	background-color: #484848;
+}
+h1 {
+	font-size: 40pt;
+	padding: 10px;
+	margin: 0px;
+}
+h2 {
+	font-size: 25pt;
+	padding: 0px;
+	margin: 0px;
+}
+h3 {
+	font-size: 18pt;
+}
+p {
+	font-size: 13pt;
+}
+.Project {
+	margin: 15px auto 15px auto;
+	padding: 5px;
+	font-size: 30pt;
+	width: 20%;
+	min-width: 225px;
+	border: thick solid black;
+	border-radius: 30%;
+	background-color: white;
+}
+#info {
+	border-radius: 25px;
+	border: thick solid black;
+	margin: 10px auto 10px auto;
+	width: 60%;
+	height: 0;
+	padding: 10px;
+	padding-bottom: 30%;
+	background-color: lightgray;
+}
