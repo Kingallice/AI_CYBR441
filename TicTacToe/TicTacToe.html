@@ -26,21 +26,30 @@
                 margin-left: auto;
                 margin-right: auto;
             }
-			#win {
-				text-align: center;
-				position: absolute;
-				left: 0;
-				right: 0;
-				margin-left: auto;
-				margin-right: auto;
-				transform: translate(0px,70px);
-				width: 350px;
-				/*height: 375px;*/
-				background-color: white;
-				/*opacity: 90%;*/
-				border: thick black solid;
-				border-radius: 30px;
-			}
+	    #back {
+		position: absolute;
+	        text-align: center;
+	        border: black solid;
+	        border-left: none;
+	        border-radius: 0% 30% 30% 0%;
+	        font-size: 20pt;
+	        background-color: white;
+	        left: 0;
+	        padding: 5px 10px 5px 10px;
+	    }
+	    #win {
+		text-align: center;
+		position: absolute;
+		left: 0;
+		right: 0;
+		margin-left: auto;
+		margin-right: auto;
+		transform: translate(0px,70px);
+		width: 350px;
+		background-color: white;
+		border: thick black solid;
+		border-radius: 30px;
+	    }
             button {
                 font-size: 18pt;
                 margin: 10px;
@@ -49,6 +58,7 @@
     </head>
     <body onload="createTable()">
         <h1 style="font-size:20pt;">Tic Tac Toe</h1>
+	<a href="../index.html"><div id="back">Go Back</div></a>
         <h3><button onclick="createTable()">New Game</button>
 		AI<input type="checkbox" id='check'></h3>
 		<div id='win' hidden><h1>Player X Wins</h1></div>
