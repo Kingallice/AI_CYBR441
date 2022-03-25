@@ -36,3 +36,14 @@ p {
 	padding: 10px;
 	background-color: lightgray;
 }
+#back {
+	position: absolute;
+	text-align: center;
+	border: black solid;
+	border-left: none;
+	border-radius: 0% 30% 30% 0%;
+	font-size: 20pt;
+	background-color: white;
+	left: 0;
+	padding: 5px 10px 5px 10px;
+}
