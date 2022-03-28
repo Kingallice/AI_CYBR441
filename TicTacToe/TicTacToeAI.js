@@ -16,7 +16,7 @@ var board = [
 var lastMove = [];
 
 function think() {
-	let allCount = placeCount();
+	let allCount = placedCount();
 
 	if (allCount>=9) return;
 
@@ -32,7 +32,7 @@ function think() {
 	
 	//If player is playing Xs, play this way.
 	if (AIchar == 1) {
-		let Xcount = placeCount(1);
+		let Xcount = placedCount(1);
 
 		if (Xcount == 0) {
 			//picks a random corner
@@ -48,7 +48,7 @@ function think() {
 	
 	//if Player is playing Os, play this way.
 	else {
-		let Ocount = placeCount(2);
+		let Ocount = placedCount(2);
 		if (Ocount==0) {
 
 			//move to the center if it's the first move.
