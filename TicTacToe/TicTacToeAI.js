@@ -4,7 +4,7 @@
 
 //AIchar = X.
 var AIchar = 1;
-var playerChar = (AIchar==1) ? 2 : 1;
+var playerChar = 2-(AIchar-1);
 
 var board = [
 	[0, 0, 0],
@@ -16,6 +16,10 @@ var board = [
 var lastMove = [];
 
 function think() {
+	let allCount = placeCount();
+
+	if (allCount>=9) return;
+
     var move = 0;
 	//Do winning move if possible.
 	move = getWinningMove(AIchar);
@@ -26,23 +30,39 @@ function think() {
     if (move!=0) {doMove(move); return;}
 
 	
-	let allCount = placeCount();
-	let Xcount = placeCount(1);
-	let Ocount = placeCount(2);
 	//If player is playing Xs, play this way.
 	if (AIchar == 1) {
+		let Xcount = placeCount(1);
 
-		if (allCount == 0) {
-			
+		if (Xcount == 0) {
+			//picks a random corner
+			move = [Math.round(Math.random())*2,Math.round(Math.random())*2];
+			return move;
+		} if (Xcount>0 && Xcount<9) {
+			//get non-blocked corner
+			let corners = getUnblockedCorners();
+			move = corners[Math.round(Math.random()*(corners.length-1))];
+			return move
 		}
 	}
 	
 	//if Player is playing Os, play this way.
 	else {
+		let Ocount = placeCount(2);
+		if (Ocount==0) {
 
+			//move to the center if it's the first move.
+			move = [1,1];
+			return move;
+		} if (Ocount>0) {
+			//block X corner shenanigans
+			let moves = blockCorner();
+			move = moves[Math.round(Math.random()*(moves.length-1))];
+
+		}
 	}
 	
-	//Default to mirroring move of opponent.	
+	//Idea not implemented: mirroring opponent's move.	
     var moves = possibleMoves();
 
     //returns random move for now!
@@ -230,6 +250,34 @@ function placedCount(type = 0) {
 	return count;
 }
 
+function getUnblockedCorners() {
+	//iterates through all corners.
+	let possibleCells = [];
+	for (let i=0; i<4; i++) {
+		let x = (i%2)*2;
+		let y = Math.floor(i/2)*2;
 
+		if (board[x+(1-x)][y]!=0 && board[x][y+(1-y)] != 0 && board[x][y] == 0) {
+			possibleCells.push([x, y]);
+		}
+	}
 
+	return possibleCells;
+}
 
+function blockCorner() {
+	let possibleCells = [];
+	for (let i=0; i<4; i++) {
+		let x = (i%2)*2;
+		let y = Math.floor(i/2)*2;
+
+		if (board[x][y]==2-(AIchar-1)) {
+			if (board[x+(1-x)][y]==0)
+				possibleCells.push([x+(1-x),y]);
+			if (board[x][y+(1-y)]==0)
+				possibleCells.push([x,y+(1-y)]);
+		}
+	}
+
+	return possibleCells;
+}

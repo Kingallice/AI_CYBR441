@@ -1,3 +1,15 @@
+//Blake's addition
+checkbox = document.getElementById("check");
+window.checked = false;
+window.isAITurn = false;
+checkbox.addEventListener('change', function() {
+	if (this.checked)
+		playMove(think());
+	window.checked = this.checked;
+	window.isAITurn = this.checked;
+});
+//End of addition
+
 //Creates a table for TicTacToe
 winElement = document.getElementById('win');
 function createTable(sizeArr=[3, 3]) {
@@ -19,6 +31,16 @@ function createTable(sizeArr=[3, 3]) {
 move = 'X'
 Final = false;
 function playMove(obj) {
+	tableArr = TableToArray();
+	if (Array.isArray(obj)) {
+		if (obj!=null)
+			tableArr[obj[0]][obj[1]] = move;
+			if(move == 'X')
+			move = 'O';
+		else
+			move = 'X';
+	} else
+
 	if(validMove(obj) && !Final){
 		obj.innerHTML = move;
 		tableArr = TabletoArray()
@@ -26,8 +48,15 @@ function playMove(obj) {
 			move = 'O';
 		else
 			move = 'X';
-	}	
+		
+	}
+	//switches AI on and off appropriately.
+	if (window.checked) window.isAITurn = !isAITurn;
+	
 	Final = winCheck()[0];
+
+	if (Array.isArray(obj))
+		rebuildTable(tableArr);
 }
 //Checks for a possible wins
 function winCheck(){
@@ -122,7 +151,7 @@ function TabletoArray(t=table) {
 	return arrTable;
 }
 //rebuilds the table using passed array
-function rebuildTable(arr=[[0, 1, 2], [3, 4, 5], [6, 7, 8]]) {
+function rebuildTable(arr=[[0, 0, 0], [0, 0, 0], [0, 0, 0]]) {
 	table.innerHTML = "";
 	value = null;
 	for (let i = 0; i < arr.length; i++) {
