@@ -31,7 +31,7 @@ function createTable(sizeArr=[3, 3]) {
 move = 'X'
 Final = false;
 function playMove(obj) {
-	tableArr = TableToArray();
+	tableArr = TabletoArray();
 	if (Array.isArray(obj)) {
 		if (obj!=null)
 			tableArr[obj[0]][obj[1]] = move;
