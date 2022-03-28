@@ -24,6 +24,23 @@ function think() {
 	//Block instant opponent wins next move.
 	move = getWinningMove(playerChar);
     if (move!=0) {doMove(move); return;}
+
+	
+	let allCount = placeCount();
+	let Xcount = placeCount(1);
+	let Ocount = placeCount(2);
+	//If player is playing Xs, play this way.
+	if (AIchar == 1) {
+
+		if (allCount == 0) {
+			
+		}
+	}
+	
+	//if Player is playing Os, play this way.
+	else {
+
+	}
 	
 	//Default to mirroring move of opponent.	
     var moves = possibleMoves();
@@ -59,7 +76,6 @@ function calcWinner() {
 	//check rows.
 	for (let i=0; i<board.length; i++) {
 		for (let j=0; j<board[i].length; j++) {
-			//if (winner!=-1) return winner;
 			if (board[i][j] == 0) {
 				emptyCell = true;
 				count = 0;
@@ -81,7 +97,6 @@ function calcWinner() {
 	countCell = board[0][0];
 	for (let i=0; i<board[0].length; i++) {
 		for (let j=0; j<board.length; j++) {
-			//if (winner!=-1) return winner;
 			if (board[j][i] == 0) {
 				emptyCell = true;
 				count = 0;
@@ -138,7 +153,7 @@ function getWinningMove(XorO) {
 		emptyCell = null;
 		for (let j=0; j<board[i].length; j++) {
 			if (board[i][j] == 0) {
-				emptyCell = board[i][j];
+				emptyCell = [i,j];
 			}
 			if (board[i][j] == XorO) {
 				count++;
@@ -154,7 +169,7 @@ function getWinningMove(XorO) {
 		emptyCell = null;
 		for (let j=0; j<board.length; j++) {
 			if (board[j][i] == 0) {
-				emptyCell = board[j][i];
+				emptyCell = [j,i];
 			}
 			if (board[j][i] == XorO) {
 				count++;
@@ -168,7 +183,7 @@ function getWinningMove(XorO) {
     count = 0;
     for (let i=0; i<board.length; i++) {
         if (board[i][i] == 0) {
-            emptyCell = board[i][i];
+            emptyCell = [i,i];
         }
         if (board[i][i] == XorO) {
             count++;
@@ -180,7 +195,7 @@ function getWinningMove(XorO) {
     count = 0;
     for (let i=board.length-1; i>=0; i--) {
         if (board[(board.length-1)-i][i] == 0) {
-            emptyCell = board[(board.length-1)-i][i];
+            emptyCell = [(board.length-1)-i,i];
         }
         if (board[(board.length-1)-i][i] == XorO) {
             count++;
@@ -190,6 +205,29 @@ function getWinningMove(XorO) {
 
 
 	return 0; //0 means there are no winning moves currently.
+}
+
+function placedCount(type = 0) {
+	//0: count Xs and Os
+	//1: count Xs
+	//2: count Os
+	let count = 0;
+	
+	if (type==0) {
+		for (let i=0; i<board.length; i++) {
+			for (let j=0; j<board[i].length; j++) {
+				if (board[i][j]!=0) count++;
+			}
+		}
+	} else {
+		for (let i=0; i<board.length; i++) {
+			for (let j=0; j<board[i].length; j++) {
+				if (board[i][j]==type) count++;
+			}
+		}
+	}
+
+	return count;
 }
 
 
