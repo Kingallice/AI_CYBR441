@@ -33,6 +33,7 @@ Final = false;
 function playMove(obj) {
 	tableArr = TabletoArray();
 	if (Array.isArray(obj)) {
+		alert("working");
 		if (obj!=null)
 			tableArr[obj[0]][obj[1]] = move;
 			if(move == 'X')
@@ -48,6 +49,9 @@ function playMove(obj) {
 			move = 'O';
 		else
 			move = 'X';
+		
+		if (window.checked)
+			playMove(think());
 		
 	}
 	//switches AI on and off appropriately.
