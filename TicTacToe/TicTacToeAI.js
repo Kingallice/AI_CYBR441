@@ -6,28 +6,48 @@
 var AIchar = 1;
 var playerChar = 2-(AIchar-1);
 
-var board = [
+window.board = [
 	[0, 0, 0],
 	[0, 0, 0],
 	[0, 0, 0]
-]
+];
 
+function defineBoard(arr) {
+	window.board = [[0,0,0],[0,0,0],[0,0,0]];
+	var b = [[0,0,0],[0,0,0],[0,0,0]];
+	for (let i=0; i<window.board.length; i++) {
+		for (let j=0; j<window.board[0].length; j++) {
+			let value = arr[i][j];
+			window.board[i][j] = (value=='') ? 0 : (value=='X') ? 1 : 2;
+			b[i][j] = (value=='') ? 0 : (value=='X') ? 1 : 2;
+		}
+	}
+	// console.log(b);
+	// console.log(window.board);
+	// console.log(arr);
+}
 //
 var lastMove = [];
 
 function think() {
+	console.log("thinking...");
+	tableArr = TabletoArray();
+		defineBoard(tableArr);
 	let allCount = placedCount();
 
-	if (allCount>=9) return;
+	if (allCount>=9) return 0;
 
     var move = 0;
 	//Do winning move if possible.
 	move = getWinningMove(AIchar);
-    if (move!=0) {doMove(move); return;}
+	console.log(move);
+    if (move!=0) {return move;}
 
 	//Block instant opponent wins next move.
+	console.log("Player char: "+playerChar+", AIchar: "+AIchar);
 	move = getWinningMove(playerChar);
-    if (move!=0) {doMove(move); return;}
+	console.log(move);
+    if (move!=0) {return move;}
 
 	
 	//If player is playing Xs, play this way.
@@ -38,11 +58,13 @@ function think() {
 			//picks a random corner
 			move = [Math.round(Math.random())*2,Math.round(Math.random())*2];
 			return move;
-		} if (Xcount>0 && Xcount<9) {
+		} if (Xcount>0) {
 			//get non-blocked corner
 			let corners = getUnblockedCorners();
-			move = corners[Math.round(Math.random()*(corners.length-1))];
-			return move
+			if (corners!=null) {
+				move = corners[Math.round(Math.random()*(corners.length-1))];
+				return move
+			}
 		}
 	}
 	
@@ -57,8 +79,10 @@ function think() {
 		} if (Ocount>0) {
 			//block X corner shenanigans
 			let moves = blockCorner();
-			move = moves[Math.round(Math.random()*(moves.length-1))];
-
+			if (moves!=null) {
+				move = moves[Math.round(Math.random()*(moves.length-1))];
+				return move;
+			}
 		}
 	}
 	
@@ -71,88 +95,88 @@ function think() {
 
 function possibleMoves() {
     let pMoves = [];
-    for (let i=0; i<board.length; i++) {
-        for (let j=0; j<board[i].length; j++) {
-            if (board[i][j] == 0) pMoves.push(board[i][j]);
+    for (let i=0; i<window.board.length; i++) {
+        for (let j=0; j<window.board[i].length; j++) {
+            if (window.board[i][j] == 0) pMoves.push(window.board[i][j]);
         }
     }
 }
 
 function doMove(move) {
-	board[move[0]][move[1]] = AIchar;
+	window.board[move[0]][move[1]] = AIchar;
 	
 }
 
 function doPlayerMove(move, playerChar) {
-	board[move[0]][move[1]] = playerChar;
+	window.board[move[0]][move[1]] = playerChar;
 }
 
 function calcWinner() {
 	let winner = -1; // -1 means no winner.
 	let count = 0; //if 3, there's a winner.
 	let emptyCell = false;
-	let countCell = board[0][0]; //tracks if we're counting Xs or Os, gets first cell we're counting initially.
+	let countCell = window.board[0][0]; //tracks if we're counting Xs or Os, gets first cell we're counting initially.
 	
 	//check rows.
-	for (let i=0; i<board.length; i++) {
-		for (let j=0; j<board[i].length; j++) {
-			if (board[i][j] == 0) {
+	for (let i=0; i<window.board.length; i++) {
+		for (let j=0; j<window.board[i].length; j++) {
+			if (window.board[i][j] == 0) {
 				emptyCell = true;
 				count = 0;
 				break;
 			}
-			if (board[i][j] == countCell) count++;
+			if (window.board[i][j] == countCell) count++;
 			else count = 0;
 			
 			//return winner
-			if (count==3) return board[i][j];
+			if (count==3) return window.board[i][j];
 			
-			countCell = board[i][j];
+			countCell = window.board[i][j];
 		}
 	}
 	
 	
 	//check columns.
 	count = 0;
-	countCell = board[0][0];
-	for (let i=0; i<board[0].length; i++) {
-		for (let j=0; j<board.length; j++) {
+	countCell = window.board[0][0];
+	for (let i=0; i<window.board[0].length; i++) {
+		for (let j=0; j<window.board.length; j++) {
 			if (board[j][i] == 0) {
 				emptyCell = true;
 				count = 0;
 				break;
 			}
-			if (board[i][j] == countCell) count++;
+			if (window.board[i][j] == countCell) count++;
 			else {
 				count = 0; break;
 			}
 			
 			//return winner
-			if (count==3) return board[j][i];
+			if (count==3) return window.board[j][i];
 			
-			countCell = board[j][i];
+			countCell = window.board[j][i];
 		}
 	}
 	
 	//check diagonals
 	count = 0;
-	countCell = board[0][0];
-	for (let i=0; i<board.length; i++) {
-		if (board[i][i] == countCell) count++;
+	countCell = window.board[0][0];
+	for (let i=0; i<window.board.length; i++) {
+		if (window.board[i][i] == countCell) count++;
 		else {
 			count = 0; break;
 		}
-		if (count==3) return board[i][i];
+		if (count==3) return window.board[i][i];
 	}
 	
 	count = 0;
-	countCell = board[0][2];
-	for (let i=board.length-1; i>=0; i--) {
-		if (board[(board.length-1)-i][i] == countCell) count++;
+	countCell = window.board[0][2];
+	for (let i=window.board.length-1; i>=0; i--) {
+		if (window.board[(window.board.length-1)-i][i] == countCell) count++;
 		else {
 			count = 0; break;
 		}
-		if (count==3) return board[i][i];
+		if (count==3) return window.board[i][i];
 	}
 	
 	
@@ -168,44 +192,50 @@ function getWinningMove(XorO) {
 	let emptyCell = null; // keeps track of the empty cell for a given line.
 
     //rows
-	for (let i=0; i<board.length; i++) {
+	for (let i=0; i<window.board.length; i++) {
 		count = 0;
-		emptyCell = null;
-		for (let j=0; j<board[i].length; j++) {
-			if (board[i][j] == 0) {
+		emptyCell = 0;
+		for (let j=0; j<window.board[i].length; j++) {
+			if (window.board[i][j] == 0) {
 				emptyCell = [i,j];
 			}
-			if (board[i][j] == XorO) {
+			if (window.board[i][j] == XorO) {
 				count++;
 			}
-			if (count==2 && emptyCell != null) return emptyCell;
+			if (count>=2 && emptyCell != 0) {
+				console.log("row counted");
+				return emptyCell;
+			}
 			
 		}
 	}
 	
     //columns
-	for (let i=0; i<board[0].length; i++) {
+	for (let i=0; i<window.board[0].length; i++) {
 		count = 0;
-		emptyCell = null;
-		for (let j=0; j<board.length; j++) {
-			if (board[j][i] == 0) {
+		emptyCell = 0;
+		for (let j=0; j<window.board.length; j++) {
+			if (window.board[j][i] == 0) {
 				emptyCell = [j,i];
 			}
-			if (board[j][i] == XorO) {
+			if (window.board[j][i] == XorO) {
 				count++;
 			}
-			if (count==2 && emptyCell != null) return emptyCell;
+			if (count>=2 && emptyCell != 0) {
+				console.log("column counted");
+				return emptyCell;
+			}
 			
 		}
 	}
 	
     //check diagonals
     count = 0;
-    for (let i=0; i<board.length; i++) {
-        if (board[i][i] == 0) {
+    for (let i=0; i<window.board.length; i++) {
+        if (window.board[i][i] == 0) {
             emptyCell = [i,i];
         }
-        if (board[i][i] == XorO) {
+        if (window.board[i][i] == XorO) {
             count++;
         }
         if (count==2 && emptyCell != null) return emptyCell;
@@ -213,11 +243,11 @@ function getWinningMove(XorO) {
     }
 
     count = 0;
-    for (let i=board.length-1; i>=0; i--) {
-        if (board[(board.length-1)-i][i] == 0) {
-            emptyCell = [(board.length-1)-i,i];
+    for (let i=window.board.length-1; i>=0; i--) {
+        if (window.board[(window.board.length-1)-i][i] == 0) {
+            emptyCell = [(window.board.length-1)-i,i];
         }
-        if (board[(board.length-1)-i][i] == XorO) {
+        if (window.board[(window.board.length-1)-i][i] == XorO) {
             count++;
         }
         if (count==2 && emptyCell != null) return emptyCell;
@@ -234,15 +264,15 @@ function placedCount(type = 0) {
 	let count = 0;
 	
 	if (type==0) {
-		for (let i=0; i<board.length; i++) {
-			for (let j=0; j<board[i].length; j++) {
-				if (board[i][j]!=0) count++;
+		for (let i=0; i<window.board.length; i++) {
+			for (let j=0; j<window.board[i].length; j++) {
+				if (window.board[i][j]!=0) count++;
 			}
 		}
 	} else {
-		for (let i=0; i<board.length; i++) {
-			for (let j=0; j<board[i].length; j++) {
-				if (board[i][j]==type) count++;
+		for (let i=0; i<window.board.length; i++) {
+			for (let j=0; j<window.board[i].length; j++) {
+				if (window.board[i][j]==type) count++;
 			}
 		}
 	}
@@ -257,8 +287,8 @@ function getUnblockedCorners() {
 		let x = (i%2)*2;
 		let y = Math.floor(i/2)*2;
 
-		if (board[x+(1-x)][y]!=0 && board[x][y+(1-y)] != 0 && board[x][y] == 0) {
-			possibleCells.push([x, y]);
+		if (window.board[y+(1-y)][x]==0 && window.board[y][x+(1-x)] == 0 && window.board[y][x] == 0) {
+			possibleCells.push([y, x]);
 		}
 	}
 
@@ -271,10 +301,10 @@ function blockCorner() {
 		let x = (i%2)*2;
 		let y = Math.floor(i/2)*2;
 
-		if (board[x][y]==2-(AIchar-1)) {
-			if (board[x+(1-x)][y]==0)
+		if (window.board[x][y]==2-(AIchar-1)) {
+			if (window.board[x+(1-x)][y]==0)
 				possibleCells.push([x+(1-x),y]);
-			if (board[x][y+(1-y)]==0)
+			if (window.board[x][y+(1-y)]==0)
 				possibleCells.push([x,y+(1-y)]);
 		}
 	}

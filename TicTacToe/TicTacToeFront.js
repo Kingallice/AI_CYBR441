@@ -3,10 +3,12 @@ checkbox = document.getElementById("check");
 window.checked = false;
 window.isAITurn = false;
 checkbox.addEventListener('change', function() {
-	if (this.checked)
-		playMove(think());
 	window.checked = this.checked;
 	window.isAITurn = this.checked;
+	AIchar = (move=='X') ? 1 : 2;
+	playerChar = 2-(AIchar-1);
+	if (this.checked)
+	playMove(think());
 });
 //End of addition
 
@@ -32,35 +34,42 @@ move = 'X'
 Final = false;
 function playMove(obj) {
 	tableArr = TabletoArray();
-	if (Array.isArray(obj)) {
-		alert("working");
-		if (obj!=null)
+	if (Array.isArray(obj) && window.isAITurn) {
+		if (obj!=null) {
 			tableArr[obj[0]][obj[1]] = move;
-			if(move == 'X')
-			move = 'O';
-		else
-			move = 'X';
-	} else
-
-	if(validMove(obj) && !Final){
+			defineBoard(tableArr);
+			rebuildTable(tableArr);
+			move = (move=='X') ? 'O' : 'X';
+			window.isAITurn = false;
+		}
+	} else if(validMove(obj) && !Final){
+		if (window.checked) window.isAITurn = true;
 		obj.innerHTML = move;
-		tableArr = TabletoArray()
-		if(move == 'X')
-			move = 'O';
-		else
-			move = 'X';
-		
-		if (window.checked)
-			playMove(think());
-		
-	}
-	//switches AI on and off appropriately.
-	if (window.checked) window.isAITurn = !isAITurn;
-	
-	Final = winCheck()[0];
+		tableArr = TabletoArray();
+		console.log(tableArr);
+		defineBoard([...tableArr]);
 
-	if (Array.isArray(obj))
 		rebuildTable(tableArr);
+		move = (move=='X') ? 'O' : 'X';
+
+		//check if player won.
+		Final = winCheck()[0];
+
+		if (window.isAITurn && window.checked && !Final) {
+			// tableArr = TabletoArray();
+			// console.log(board);
+			// defineBoard(tableArr);
+			let AImove = think();
+			// console.log(AImove);
+			tableArr[AImove[0]][AImove[1]] = move;
+			rebuildTable(tableArr);
+			defineBoard([...tableArr]);
+
+			Final = winCheck()[0];
+			move = (move=='X') ? 'O' : 'X';
+		}
+	}
+	
 }
 //Checks for a possible wins
 function winCheck(){
@@ -163,8 +172,7 @@ function rebuildTable(arr=[[0, 0, 0], [0, 0, 0], [0, 0, 0]]) {
 		for (let j = 0; j < arr[0].length; j++) {
 			//saves value at index and removes item from array
 			value = arr[i][j];
-			//console.log(arr);
-			if (value != 0)
+			if (value != '')
 				row += '<td id="c' + (j+(i*arr[0].length)) + '" onclick="playMove(this)" index="' + [i, j] + '">' + (value) + '</td>';
 			else
 				row += '<td id="c' + (j+(i*arr[0].length)) + '" onclick="playMove(this)" index="' + [i, j] + '"></td>';
