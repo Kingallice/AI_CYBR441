@@ -133,7 +133,7 @@ function winCheck(){
 					noEmpty = false;
 			}
 		}
-		if (noEmpty){
+		if (noEmpty && x = 'O'){
 			endText.innerHTML = "No Winner!";
 			winElement.hidden = false
 			return [true, null];
