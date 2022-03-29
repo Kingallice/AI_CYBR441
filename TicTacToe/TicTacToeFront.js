@@ -64,7 +64,7 @@ function playMove(obj) {
 			// defineBoard(tableArr);
 			let AImove = think();
 			// console.log(AImove);
-			tableArr[AImove[0]][AImove[1]] = AImove;
+			tableArr[AImove[0]][AImove[1]] = move;
 			rebuildTable(tableArr);
 			defineBoard([...tableArr]);
 
