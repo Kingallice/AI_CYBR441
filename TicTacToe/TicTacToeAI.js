@@ -49,14 +49,14 @@ function think() {
 		if (Xcount == 0) {
 			//picks a random corner
 			move = [Math.round(Math.random())*2,Math.round(Math.random())*2];
-			// console.log("return 1");
+			console.log("return 1");
 			return move;
 		} if (Xcount>0) {
 			//get non-blocked corner
 			let corners = getUnblockedCorners();
-			if (corners!=null) {
+			if (moves.length!=0) {
 				move = corners[Math.round(Math.random()*(corners.length-1))];
-			// console.log("return 2");
+				console.log("return 2");
 
 				return move
 			}
@@ -70,15 +70,15 @@ function think() {
 
 			//move to the center if it's the first move.
 			move = [1,1];
-			// console.log("return 3");
+			console.log("return 3");
 
 			return move;
 		} if (Ocount>0) {
 			//block X corner shenanigans
 			let moves = blockCorner();
-			if (moves!=null) {
+			if (moves.length!=0) {
 				move = moves[Math.round(Math.random()*(moves.length-1))];
-			// console.log("return 4");
+				console.log("return 4");
 
 				return move;
 			}

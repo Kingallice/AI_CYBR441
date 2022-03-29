@@ -15,6 +15,7 @@ checkbox.addEventListener('change', function() {
 //Creates a table for TicTacToe
 winElement = document.getElementById('win');
 function createTable(sizeArr=[3, 3]) {
+	Final = false;
 	move = 'X';
 	winElement.hidden = true;
 	table = document.getElementById('gameTable');
@@ -34,6 +35,7 @@ move = 'X'
 Final = false;
 function playMove(obj) {
 	tableArr = TabletoArray();
+	console.log("trying to move...");
 	if (Array.isArray(obj) && window.isAITurn) {
 		if (obj!=null) {
 			tableArr[obj[0]][obj[1]] = move;
