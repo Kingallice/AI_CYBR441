@@ -47,6 +47,7 @@ function playMove(obj) {
 			rebuildTable(tableArr);
 			move = (move=='X') ? 'O' : 'X';
 			window.isAITurn = false;
+			Final = winCheck()[0];
 		}
 	} else if(validMove(obj) && !Final){
 		if (window.checked) window.isAITurn = true;
@@ -62,12 +63,13 @@ function playMove(obj) {
 
 		if (window.isAITurn && window.checked && !Final) {
 			let AImove = think();
+			console.log(move);
 			tableArr[AImove[0]][AImove[1]] = move;
 			rebuildTable(tableArr);
 			defineBoard([...tableArr]);
 
-			Final = winCheck()[0];
 			move = (move=='X') ? 'O' : 'X';
+			Final = winCheck()[0];
 		}
 	}
 	
