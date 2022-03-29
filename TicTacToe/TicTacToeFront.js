@@ -18,6 +18,7 @@ function createTable(sizeArr=[3, 3]) {
 	Final = false;
 	move = 'X';
 	winElement.hidden = true;
+	checkbox.checked = false;
 	table = document.getElementById('gameTable');
 	table.innerHTML = '';
 	for (let i = 0; i < sizeArr[0]; i++) {
