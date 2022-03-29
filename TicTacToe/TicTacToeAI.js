@@ -69,7 +69,11 @@ function think() {
 		if (Ocount==0) {
 
 			//move to the center if it's the first move.
-			move = [1,1];
+			if (board[1][1]!=playerChar)
+				move = [1,1];
+			else {
+				move = [Math.round(Math.random())*2,Math.round(Math.random())*2];
+			}
 			console.log("return 3");
 
 			return move;
