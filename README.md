@@ -12,7 +12,7 @@ This page includes the projects that two students, Noah Mosel and Blake Meyer, t
 
 There is both the implementations and code, as well as, the "How" each set of problems was solved by us.
 
-# The How
+# The Projects and Information
 <details>
   <summary>N*M Puzzle</summary>
   <p>
