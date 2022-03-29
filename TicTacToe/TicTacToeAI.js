@@ -66,16 +66,32 @@ function think() {
 		if (Ocount==0) {
 
 			//move to the center if it's the first move.
-			if (board[1][1]!=playerChar)
+			if (getUnblockedCorners().length>2 && board[1][1]!=playerChar) {
 				move = [1,1];
+			}
 			else {
 				move = [Math.round(Math.random())*2,Math.round(Math.random())*2];
 			}
 
 			return move;
-		} if (Ocount>0) {
+		}
+		if (board[1][1]==0) {
+			move = [1,1];
+			return move;
+		}
+		console.log(getOpenCorners().length);
+		if (Ocount==1 && getOpenCorners().length<3) {
 			//block X corner shenanigans
-			let moves = getUnblockedCorners();
+			let moves = blockCorner();
+			if (moves.length!=0) {
+				move = moves[Math.round(Math.random()*(moves.length-1))];
+
+				return move;
+			}
+		} if (Ocount>0) {
+			console.log("getting corner");
+			//block X corner shenanigans
+			let moves = getBlockedCorners();
 			if (moves.length!=0) {
 				move = moves[Math.round(Math.random()*(moves.length-1))];
 
@@ -283,6 +299,21 @@ function placedCount(type = 0) {
 	return count;
 }
 
+function getOpenCorners() {
+	//iterates through all corners.
+	let possibleCells = [];
+	for (let i=0; i<4; i++) {
+		let x = (i%2)*2;
+		let y = Math.floor(i/2)*2;
+
+		if (window.board[y][x] == 0) {
+			possibleCells.push([y, x]);
+		}
+	}
+
+	return possibleCells;
+}
+
 function getUnblockedCorners() {
 	//iterates through all corners.
 	let possibleCells = [];
@@ -291,6 +322,21 @@ function getUnblockedCorners() {
 		let y = Math.floor(i/2)*2;
 
 		if (window.board[y+(1-y)][x]==0 && window.board[y][x+(1-x)] == 0 && window.board[y][x] == 0) {
+			possibleCells.push([y, x]);
+		}
+	}
+
+	return possibleCells;
+}
+
+function getBlockedCorners() {
+	//iterates through all corners.
+	let possibleCells = [];
+	for (let i=0; i<4; i++) {
+		let x = (i%2)*2;
+		let y = Math.floor(i/2)*2;
+
+		if ((window.board[y+(1-y)][x]!=0 || window.board[y][x+(1-x)] != 0) && window.board[y][x] == 0) {
 			possibleCells.push([y, x]);
 		}
 	}
