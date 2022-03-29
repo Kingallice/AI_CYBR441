@@ -25,7 +25,6 @@ function defineBoard(arr) {
 var lastMove = [];
 
 function think() {
-	// console.log("thinking...");
 	tableArr = TabletoArray();
 		defineBoard(tableArr);
 	let allCount = placedCount();
@@ -49,14 +48,12 @@ function think() {
 		if (Xcount == 0) {
 			//picks a random corner
 			move = [Math.round(Math.random())*2,Math.round(Math.random())*2];
-			console.log("return 1");
 			return move;
 		} if (Xcount>0) {
 			//get non-blocked corner
 			let corners = getUnblockedCorners();
 			if (corners.length!=0) {
 				move = corners[Math.round(Math.random()*(corners.length-1))];
-				console.log("return 2");
 
 				return move
 			}
@@ -74,7 +71,6 @@ function think() {
 			else {
 				move = [Math.round(Math.random())*2,Math.round(Math.random())*2];
 			}
-			console.log("return 3");
 
 			return move;
 		} if (Ocount>0) {
@@ -82,7 +78,6 @@ function think() {
 			let moves = blockCorner();
 			if (moves.length!=0) {
 				move = moves[Math.round(Math.random()*(moves.length-1))];
-				console.log("return 4");
 
 				return move;
 			}
@@ -194,7 +189,6 @@ function getWinningMove(XorO) {
 	let count = 0; //if 2, there's a winning move.
 	let winningMove = false;
 	let emptyCell = null; // keeps track of the empty cell for a given line.
-	console.log(window.board);
 
     //rows
 	for (let i=0; i<window.board.length; i++) {
@@ -208,7 +202,6 @@ function getWinningMove(XorO) {
 				count++;
 			}
 			if (count>=2 && emptyCell != 0) {
-				console.log("row counted");
 				return emptyCell;
 			}
 			
@@ -227,7 +220,6 @@ function getWinningMove(XorO) {
 				count++;
 			}
 			if (count>=2 && emptyCell != 0) {
-				console.log("column counted");
 				return emptyCell;
 			}
 			

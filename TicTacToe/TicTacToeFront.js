@@ -52,7 +52,6 @@ function playMove(obj) {
 		if (window.checked) window.isAITurn = true;
 		obj.innerHTML = move;
 		tableArr = TabletoArray();
-		// console.log(tableArr);
 		defineBoard([...tableArr]);
 
 		rebuildTable(tableArr);
@@ -62,11 +61,7 @@ function playMove(obj) {
 		Final = winCheck()[0];
 
 		if (window.isAITurn && window.checked && !Final) {
-			// tableArr = TabletoArray();
-			// console.log(board);
-			// defineBoard(tableArr);
 			let AImove = think();
-			// console.log(AImove);
 			tableArr[AImove[0]][AImove[1]] = move;
 			rebuildTable(tableArr);
 			defineBoard([...tableArr]);
