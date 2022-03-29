@@ -14,23 +14,18 @@ window.board = [
 
 function defineBoard(arr) {
 	window.board = [[0,0,0],[0,0,0],[0,0,0]];
-	var b = [[0,0,0],[0,0,0],[0,0,0]];
 	for (let i=0; i<window.board.length; i++) {
 		for (let j=0; j<window.board[0].length; j++) {
 			let value = arr[i][j];
 			window.board[i][j] = (value=='') ? 0 : (value=='X') ? 1 : 2;
-			b[i][j] = (value=='') ? 0 : (value=='X') ? 1 : 2;
 		}
 	}
-	// console.log(b);
-	// console.log(window.board);
-	// console.log(arr);
 }
 //
 var lastMove = [];
 
 function think() {
-	console.log("thinking...");
+	// console.log("thinking...");
 	tableArr = TabletoArray();
 		defineBoard(tableArr);
 	let allCount = placedCount();
@@ -40,13 +35,10 @@ function think() {
     var move = 0;
 	//Do winning move if possible.
 	move = getWinningMove(AIchar);
-	console.log(move);
     if (move!=0) {return move;}
 
 	//Block instant opponent wins next move.
-	console.log("Player char: "+playerChar+", AIchar: "+AIchar);
 	move = getWinningMove(playerChar);
-	console.log(move);
     if (move!=0) {return move;}
 
 	
@@ -57,14 +49,14 @@ function think() {
 		if (Xcount == 0) {
 			//picks a random corner
 			move = [Math.round(Math.random())*2,Math.round(Math.random())*2];
-			console.log("return 1");
+			// console.log("return 1");
 			return move;
 		} if (Xcount>0) {
 			//get non-blocked corner
 			let corners = getUnblockedCorners();
 			if (corners!=null) {
 				move = corners[Math.round(Math.random()*(corners.length-1))];
-			console.log("return 2");
+			// console.log("return 2");
 
 				return move
 			}
@@ -78,7 +70,7 @@ function think() {
 
 			//move to the center if it's the first move.
 			move = [1,1];
-			console.log("return 3");
+			// console.log("return 3");
 
 			return move;
 		} if (Ocount>0) {
@@ -86,7 +78,7 @@ function think() {
 			let moves = blockCorner();
 			if (moves!=null) {
 				move = moves[Math.round(Math.random()*(moves.length-1))];
-			console.log("return 4");
+			// console.log("return 4");
 
 				return move;
 			}
@@ -248,7 +240,6 @@ function getWinningMove(XorO) {
             count++;
         }
         if (count==2 && emptyCell != 0) {
-			console.log("first diag...");
 			return emptyCell;
 		}
         
@@ -264,7 +255,6 @@ function getWinningMove(XorO) {
             count++;
         }
         if (count==2 && emptyCell != 0) {
-			console.log("second diag...");
 			return emptyCell;
 		}
 	}
