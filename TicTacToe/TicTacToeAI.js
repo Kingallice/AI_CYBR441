@@ -75,7 +75,7 @@ function think() {
 			return move;
 		} if (Ocount>0) {
 			//block X corner shenanigans
-			let moves = blockCorner();
+			let moves = getUnblockedCorners();
 			if (moves.length!=0) {
 				move = moves[Math.round(Math.random()*(moves.length-1))];
 
@@ -95,7 +95,7 @@ function possibleMoves() {
     let pMoves = [];
     for (let i=0; i<window.board.length; i++) {
         for (let j=0; j<window.board[i].length; j++) {
-            if (window.board[i][j] == 0) pMoves.push(window.board[i][j]);
+            if (window.board[i][j] == 0) pMoves.push([i,j]);
         }
     }
 	return pMoves;

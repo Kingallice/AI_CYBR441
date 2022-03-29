@@ -15,6 +15,7 @@ checkbox.addEventListener('change', function() {
 //Creates a table for TicTacToe
 winElement = document.getElementById('win');
 function createTable(sizeArr=[3, 3]) {
+	window.checked = false;
 	Final = false;
 	move = 'X';
 	winElement.hidden = true;
@@ -29,7 +30,7 @@ function createTable(sizeArr=[3, 3]) {
 		row += '</tr>';
 		table.innerHTML += row;
 	}
-	if (window.checked) {
+	if (window.checked && window.isAITurn) {
 		AIchar = (move=='X') ? 1 : 2;
 		playerChar = 2-(AIchar-1);
 		playMove(think());
@@ -64,7 +65,6 @@ function playMove(obj) {
 
 		if (window.isAITurn && window.checked && !Final) {
 			let AImove = think();
-			console.log(move);
 			tableArr[AImove[0]][AImove[1]] = move;
 			rebuildTable(tableArr);
 			defineBoard([...tableArr]);
