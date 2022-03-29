@@ -28,6 +28,7 @@ function createTable(sizeArr=[3, 3]) {
 		row += '</tr>';
 		table.innerHTML += row;
 	}
+	if (window.checked) playMove(think());
 }
 //Checks to see if move is possible and continues if so...
 //If game is Final -> Play no longer possible
@@ -63,7 +64,7 @@ function playMove(obj) {
 			// defineBoard(tableArr);
 			let AImove = think();
 			// console.log(AImove);
-			tableArr[AImove[0]][AImove[1]] = move;
+			tableArr[AImove[0]][AImove[1]] = AImove;
 			rebuildTable(tableArr);
 			defineBoard([...tableArr]);
 
