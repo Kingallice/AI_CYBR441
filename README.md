@@ -10,7 +10,7 @@ This class worked on introducing students to the world of Artificial Intelligenc
 
 This page includes the projects that two students, Noah Mosel and Blake Meyer, teamed up to create throughout the Spring 2022 session of the CYBR 441 class about AI.
 
-There is both the implementations and code, as well as, the How each set of problems was solved by us.
+There is both the implementations and code, as well as, the "How" each set of problems was solved by us.
 
 # The How
 <details>
