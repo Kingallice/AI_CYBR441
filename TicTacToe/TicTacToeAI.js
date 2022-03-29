@@ -99,6 +99,7 @@ function possibleMoves() {
             if (window.board[i][j] == 0) pMoves.push(window.board[i][j]);
         }
     }
+	return pMoves;
 }
 
 function doMove(move) {
