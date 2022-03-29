@@ -57,12 +57,15 @@ function think() {
 		if (Xcount == 0) {
 			//picks a random corner
 			move = [Math.round(Math.random())*2,Math.round(Math.random())*2];
+			console.log("return 1");
 			return move;
 		} if (Xcount>0) {
 			//get non-blocked corner
 			let corners = getUnblockedCorners();
 			if (corners!=null) {
 				move = corners[Math.round(Math.random()*(corners.length-1))];
+			console.log("return 2");
+
 				return move
 			}
 		}
@@ -75,12 +78,16 @@ function think() {
 
 			//move to the center if it's the first move.
 			move = [1,1];
+			console.log("return 3");
+
 			return move;
 		} if (Ocount>0) {
 			//block X corner shenanigans
 			let moves = blockCorner();
 			if (moves!=null) {
 				move = moves[Math.round(Math.random()*(moves.length-1))];
+			console.log("return 4");
+
 				return move;
 			}
 		}
@@ -190,6 +197,7 @@ function getWinningMove(XorO) {
 	let count = 0; //if 2, there's a winning move.
 	let winningMove = false;
 	let emptyCell = null; // keeps track of the empty cell for a given line.
+	console.log(window.board);
 
     //rows
 	for (let i=0; i<window.board.length; i++) {
@@ -231,6 +239,7 @@ function getWinningMove(XorO) {
 	
     //check diagonals
     count = 0;
+	emptyCell = 0;
     for (let i=0; i<window.board.length; i++) {
         if (window.board[i][i] == 0) {
             emptyCell = [i,i];
@@ -238,11 +247,15 @@ function getWinningMove(XorO) {
         if (window.board[i][i] == XorO) {
             count++;
         }
-        if (count==2 && emptyCell != null) return emptyCell;
+        if (count==2 && emptyCell != 0) {
+			console.log("first diag...");
+			return emptyCell;
+		}
         
     }
 
     count = 0;
+	emptyCell = 0;
     for (let i=window.board.length-1; i>=0; i--) {
         if (window.board[(window.board.length-1)-i][i] == 0) {
             emptyCell = [(window.board.length-1)-i,i];
@@ -250,8 +263,11 @@ function getWinningMove(XorO) {
         if (window.board[(window.board.length-1)-i][i] == XorO) {
             count++;
         }
-        if (count==2 && emptyCell != null) return emptyCell;
-    }
+        if (count==2 && emptyCell != 0) {
+			console.log("second diag...");
+			return emptyCell;
+		}
+	}
 
 
 	return 0; //0 means there are no winning moves currently.

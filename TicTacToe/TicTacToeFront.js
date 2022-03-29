@@ -46,7 +46,7 @@ function playMove(obj) {
 		if (window.checked) window.isAITurn = true;
 		obj.innerHTML = move;
 		tableArr = TabletoArray();
-		console.log(tableArr);
+		// console.log(tableArr);
 		defineBoard([...tableArr]);
 
 		rebuildTable(tableArr);
