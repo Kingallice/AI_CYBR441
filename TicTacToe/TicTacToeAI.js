@@ -54,7 +54,7 @@ function think() {
 		} if (Xcount>0) {
 			//get non-blocked corner
 			let corners = getUnblockedCorners();
-			if (moves.length!=0) {
+			if (corners.length!=0) {
 				move = corners[Math.round(Math.random()*(corners.length-1))];
 				console.log("return 2");
 
