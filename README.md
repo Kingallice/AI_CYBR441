@@ -45,9 +45,12 @@ These methods are then repeated until the puzzle has been simplified down to a 2
 The 2x3 puzzle is the easiest part of the puzzle that is solvable though the use of brute force. So when this remains, the algorithm looks for all possible states, until it finds the state that solves the puzzle as a whole. The puzzle is solved down to here, so that brute force is a manageable solution to solving every puzzle. This cuts down much work required that may be neccessary for slightly larger versions of this puzzle.
     </p>
 </details>
-	
+</p>
+</details>
+
+##
 <details>
-	<summary>Tic Tac Toe</summary>
+<summary>Tic Tac Toe</summary>
 	<p>
 
 # Tic Tac Toe
@@ -61,5 +64,5 @@ The Artificial Intelligence built for this Tic Tac Toe game will always look to 
 The algorithm that ensures victories and ties involves looking at the corners of the grid. If the AI were to place first, it will pick a corner to play in. Next, the AI will look toward placing another token into a corner to create a situation of [1,-,1] on the board. From here the AI will choose to look for the remaining corner to complete the triangle. From here the player should be backed into a situation where the AI can win using either of the remaining two moves. So from here the AI focuses on completing whichever line is left to secure the win.
 	</p>
 </details>
-  </p>
-</details>
+
+##
