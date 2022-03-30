@@ -16,7 +16,8 @@ There is both the implementations and code, as well as, the "How" each set of pr
 <details>
   <summary>N*M Puzzle</summary>
   <p>
-    
+  
+# N*M Puzzle
 ## Concept
 The N*M Puzzle is a puzzle that the goal is to get the tiles to a desired pattern. This may seem simple, but the order of the tiles changes what is possible. This is because the tiles can only slide into the open space. So, looking at the open space, one can either go up, down, left, or right. Our version creates a puzzle that has a max size of 25x25, however, this is rare and size in practice stays much closer to the range 15.
 
@@ -42,6 +43,22 @@ The algorithm first looks to ensure that required tiles are not placed within th
 These methods are then repeated until the puzzle has been simplified down to a 2x3 puzzle.
 #### 2x3 Puzzle
 The 2x3 puzzle is the easiest part of the puzzle that is solvable though the use of brute force. So when this remains, the algorithm looks for all possible states, until it finds the state that solves the puzzle as a whole. The puzzle is solved down to here, so that brute force is a manageable solution to solving every puzzle. This cuts down much work required that may be neccessary for slightly larger versions of this puzzle.
-    </details>
+    </p>
+</details>
+<details>
+	<summary>Tic Tac Toe</summary>
+	<p>
+
+# Tic Tac Toe
+## Concept
+The concept of Tic Tac Toe is a simple game, where two players compete to make a line before their opponent. The most common version of this game involves a 2D grid that is three tiles wide and three tiles tall. Then each player chooses a token: 'X' or 'O'. Generally, the player that has recieved the 'X' token will go first. After this individual choose a location to place a token, the other player will place their token on the board. This will occur until one of the players has placed their tiles into a line of three tokens, or no open spaces remain. If this occurs, the game is a "Cats" game, as there is no winner.
+
+## The AI
+The Artificial Intelligence built for this Tic Tac Toe game will always look to win. This is done by searching first for any possiblities that allow the AI to place the remaining token into an unfinished line. If these do not exist, the AI looks to ensure that the player will never win, as it searches for the remaining place the player would need to place his/her token to win the game. From here, the AI will then look for the next location that is open within an algorithm that can gurantee a win or tied game for the AI.
+
+### The Algorithm
+The algorithm that ensures victories and ties involves looking at the corners of the grid. If the AI were to place first, it will pick a corner to play in. Next, the AI will look toward placing another token into a corner to create a situation of [1,-,1] on the board. From here the AI will choose to look for the remaining corner to complete the triangle. From here the player should be backed into a situation where the AI can win using either of the remaining two moves. So from here the AI focuses on completing whichever line is left to secure the win.
+	</p>
+</details>
   </p>
 </details>
