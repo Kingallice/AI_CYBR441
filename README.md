@@ -48,7 +48,7 @@ The 2x3 puzzle is the easiest part of the puzzle that is solvable though the use
 </p>
 </details>
 
-##
+***
 <details>
 <summary>Tic Tac Toe</summary>
 	<p>
@@ -65,4 +65,4 @@ The algorithm that ensures victories and ties involves looking at the corners of
 	</p>
 </details>
 
-##
+***
