@@ -45,6 +45,7 @@ These methods are then repeated until the puzzle has been simplified down to a 2
 The 2x3 puzzle is the easiest part of the puzzle that is solvable though the use of brute force. So when this remains, the algorithm looks for all possible states, until it finds the state that solves the puzzle as a whole. The puzzle is solved down to here, so that brute force is a manageable solution to solving every puzzle. This cuts down much work required that may be neccessary for slightly larger versions of this puzzle.
     </p>
 </details>
+	
 <details>
 	<summary>Tic Tac Toe</summary>
 	<p>
