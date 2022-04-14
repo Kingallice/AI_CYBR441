@@ -1,0 +1,501 @@
+<html>
+    <style>
+        body{
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .centered {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .border {
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+
+        h2 {
+            display: inline-block;
+        }
+
+        .centerDIV {
+            display: flex;
+            justify-content: center;
+        }
+
+        .colorGreen {
+            color: rgb(127, 180, 127);
+        }
+        .colorBlue {
+            color: rgb(127, 127, 180);
+        }
+    </style>
+
+    <div id = "container" class = "centerDIV">
+        <h2 class="colorGreen">0&nbsp;</h2><h2>—</h2><h2 class="colorBlue">&nbsp;0</h2>
+    </div>
+    <canvas id = "canvas" class = "centered border" width = "500" height = "500"></canvas>
+    <body>
+        <script type="text/javascript">
+            const frameRate = 30;
+
+            //startup
+            var canvas = document.getElementById("canvas");
+            var c = canvas.getContext('2d');
+            var friction = 0.9;
+            var scores = [0,0];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            class Ball {
+                constructor(x, y, radius) {
+                    this.xAcel = 0;
+                    this.yAcel = 0;
+                    this.xVel = 0;
+                    this.yVel = 0;
+
+                    this.x = x;
+                    this.y = y;
+                    this.radius = radius;
+                    this.rgb = "rgb(180, 180, 180)";
+                }
+                
+                draw() {
+                    c.beginPath();
+                    c.fillStyle = this.rgb;
+                    c.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+                    c.fill();
+                }
+            }
+
+            class MovingBall extends Ball {
+                constructor(x, y, radius, throwMax, tRegen) {
+                    super(x, y, radius);
+
+                    this.throwMax = throwMax;
+                    this.throwAmount = throwMax;
+                    this.tRegen = tRegen;
+                    this.tCost = 30;
+                    this.throwAngle = 0;
+
+                    this.maxCooldown = 10;
+                    this.throwCooldown = this.maxCooldown;
+
+                    this.hit = false;
+                    this.throwSpeed = 10;
+
+                    this.lineLength = 50;
+                    this.lineOffset = 25;
+                }
+
+                throw() {
+                    console.log("thrown!");
+                    console.log(this.tCost);
+                    console.log(this.throwAmount);
+                    if (this.tCost<this.throwAmount && this.throwCooldown == 0) {
+                        this.throwAmount-=this.tCost;
+                        var dodgeBall = new DodgeBall(this.x, this.y, Math.cos(this.throwAngle)*this.throwSpeed, Math.sin(this.throwAngle)*this.throwSpeed, this);
+                        dodgeBalls.push(dodgeBall);
+                        console.log(dodgeBalls);
+                        this.throwCooldown = this.maxCooldown;
+                    }
+                }
+
+                handleClocks() {
+                    //throw cooldown
+                    this.throwCooldown = Math.max(0, this.throwCooldown-1);
+
+
+                    //regen
+                    this.throwAmount = Math.min(this.throwAmount+this.tRegen, this.throwMax);
+                }
+
+                collision(object) {
+                    return checkCollision(this.x, this.y, this.radius, object.x, object.y, object.radius);
+                }
+
+                draw() {
+                    c.beginPath();
+                    c.fillStyle = this.rgb;
+                    c.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+                    c.fill();
+                    
+                    this.drawThrowAngle();
+                }
+
+                drawThrowAngle() {
+                    c.lineWidth = 2;
+                    c.strokeStyle = "#CCCCCC";
+                    c.beginPath();
+                    c.moveTo(this.x+Math.cos(this.throwAngle)*this.lineOffset,this.y+Math.sin(this.throwAngle)*this.lineOffset);
+                    c.lineTo(this.x+Math.cos(this.throwAngle)*this.lineLength,this.y+Math.sin(this.throwAngle)*this.lineLength);
+                    c.stroke();
+                }
+            }
+
+
+
+            class Player extends MovingBall {
+                constructor(x, y) {
+                    super(x, y, 20, 100, 1);
+
+                    this.throwAngle = Math.PI*3/2;
+
+                    //movement
+                    this.speed = 1;
+
+                    //used to determine acceleration based on which keys are pressed.
+                    this.aCheckXL = 0;
+                    this.aCheckYU = 0;
+                    this.aCheckXR = 0;
+                    this.aCheckYD = 0;
+
+                    this.rotateVelL = 0;
+                    this.rotateVelR = 0;
+
+                    //make player green.
+                    this.rgb = "rgb(127, 180, 127)";
+                }
+
+                update() {
+                    super.handleClocks();
+                    this.throwAngle+=this.rotateVelR-this.rotateVelL;
+
+                    this.xAcel = this.aCheckXL+this.aCheckXR;
+                    this.yAcel = this.aCheckYU+this.aCheckYD;
+
+                    this.xVel+=this.xAcel;
+                    this.yVel+=this.yAcel;
+
+                    //keeps object within x boundaries
+                    this.x+=this.xVel;
+                    var hitWall = false;
+                    if (this.x<this.radius){
+                        hitWall=true;this.x=this.radius; this.xVel=0;
+                    }
+                    if (this.x>canvas.width-this.radius){
+                        hitWall=true;this.x=canvas.width-this.radius; this.xVel=0;
+                    }
+
+                    //keeps object within y boundaries
+                    this.y+=this.yVel;
+                    if (this.y<canvas.height/2+5+this.radius) {
+                        hitWall=true;this.y=canvas.height/2+5+this.radius; this.yVel=0;
+                    }
+                    if (this.y>canvas.height-this.radius) {
+                        hitWall=true;this.y=canvas.height-this.radius; this.yVel=0;
+                    }
+
+                    //slows down the player at a constant rate.
+                    this.xVel*=friction;
+                    this.yVel*=friction;
+                }
+            }
+
+            class AI extends MovingBall {
+                constructor(x, y) {
+                    super(x, y, 20, 100, 1);
+
+                    this.throwAngle = Math.PI/2;
+
+                    this.speed = 1;
+                    
+                    //make AI blue.
+                    this.rgb = "rgb(127, 127, 180)";
+                }
+
+                think() {
+                    //returns how the AI should behave.
+
+                    //move randomly for now.
+                    if (this.xAcel==0) this.xAcel = Math.round(Math.random())*2-1;
+                    if (this.yAcel==0) this.yAcel = Math.round(Math.random())*2-1;
+                    if (Math.random()<0.2) {
+                        this.xAcel*=-1;
+                    }
+                    if (Math.random()<0.2) {
+                        this.yAcel*=-1;
+                    }
+                }
+
+                update() {
+                    super.handleClocks();
+                    //accelerations are modified in think()
+                    this.xVel+=this.xAcel;
+                    this.yVel+=this.yAcel;
+
+                    //keeps object within x boundaries
+                    this.x+=this.xVel;
+                    var hitWall = false;
+                    if (this.x<this.radius){
+                        hitWall=true;this.x=this.radius; this.xVel=0;
+                    }
+                    if (this.x>canvas.width-this.radius){
+                        hitWall=true;this.x=canvas.width-this.radius; this.xVel=0;
+                    }
+
+                    //keeps object within y boundaries
+                    this.y+=this.yVel;
+                    if (this.y<this.radius) {
+                        hitWall=true;this.y=this.radius; this.yVel=0;
+                    }
+                    if (this.y>canvas.height/2-5-this.radius) {
+                        hitWall=true;this.y=canvas.height/2-5-this.radius; this.yVel=0;
+                    }
+
+                    //slows down the AI at a constant rate.
+                    this.xVel*=friction;
+                    this.yVel*=friction;
+                }
+            }
+
+            class DodgeBall extends Ball {
+                constructor(x, y, xVel, yVel, thrower) {
+                    super(x,y, 10);
+                    this.xVel = xVel;
+                    this.yVel = yVel;
+                    this.thrower = thrower;
+                    this.popTimer = 45;
+                    this.shouldPop = false;
+                }
+
+                shortenLife() {
+                    this.popTimer--;
+                    this.shouldPop = (this.popTimer<=0);
+                }
+
+                update() {
+                    // //accelerations are modified in think()
+                    // this.xVel+=this.xAcel;
+                    // this.yVel+=this.yAcel;
+
+                    //keeps object within x boundaries (bounces off walls)
+                    this.x+=this.xVel;
+                    var hitWall = false;
+                    if (this.x<this.radius){
+                        hitWall=true;this.x=this.radius; this.xVel=-this.xVel;
+                    }
+                    if (this.x>canvas.width-this.radius){
+                        hitWall=true;this.x=canvas.width-this.radius; this.xVel=-this.xVel;
+                    }
+
+                    //keeps object within y boundaries (bounces off walls)
+                    this.y+=this.yVel;
+                    if (this.y<this.radius) {
+                        hitWall=true;this.y=this.radius; this.yVel=-this.yVel;
+                    }
+                    if (this.y>canvas.height-this.radius) {
+                        hitWall=true;this.y=canvas.height/2-5-this.radius; this.yVel=-this.yVel;
+                    }
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+            //end of class definitions
+
+
+            clearScreen();
+            startGame();
+
+            function clearScreen() {
+                c.fillStyle = "#000000";
+                c.fillRect(-5,-5,canvas.width+10,canvas.height+10);
+            }
+            function endGame(winner) {
+                //increment scores
+                scores[winner]++;
+
+                elementToChange = document.getElementById("container").children[winner*2];
+                elementToChange.innerHTML = ""+scores[winner]+" ";
+
+                //reset game
+                startGame();
+            }
+
+            var player;
+            var ai;
+            var dodgeBalls;
+            function startGame() {
+                player = new Player(canvas.width/2, canvas.height*3/4);
+                ai = new AI(canvas.width/2, canvas.height/4);
+                dodgeBalls = [];
+                gameLoop();
+            }
+
+            function gameLoop() {
+                drawStage();
+
+                updateEntities();
+
+
+                setTimeout(function() {
+                    //conditionally stop the loop here.
+                    if (player.hit) {
+                        endGame(1);
+                        return;
+                    } else if (ai.hit) {
+                        endGame(0);
+                        return;
+                    }
+                    gameLoop();
+                }, 1000/frameRate);
+            }
+
+            function updateEntities() {
+                player.update();
+
+                ai.think();
+                ai.update();
+                
+                player.draw();
+                ai.draw();
+
+
+                // console.log(dodgeBalls.length);
+                for (let i=0; i<dodgeBalls.length; i++) {
+                    //update ball
+                    dodgeBalls[i].update();
+                    dodgeBalls[i].shortenLife();
+                    dodgeBalls[i].draw();
+
+                    //check for collision
+                    ai.hit =  (ai!=dodgeBalls[i].thrower) && ai.collision(dodgeBalls[i]);
+                    player.hit = (player!=dodgeBalls[i].thrower) && player.collision(dodgeBalls[i]);
+
+                    //if there is a collision, go to endGame.
+                    if (ai.hit || player.hit) {
+                        console.log("AI: "+ai.hit+", player: "+player.hit);
+                        return;
+                    }
+
+                    //remove ball if it is too old
+                    if (dodgeBalls[i].shouldPop) {
+                        dodgeBalls.splice(i, 1);
+                        i--;
+                    }
+                }
+            }
+
+            function drawStage() {
+                c.fillStyle = "#AAAAAA";
+                c.fillRect(-5,-5,canvas.width+10,canvas.height+10);
+
+                c.fillStyle = "#000000";
+                c.fillRect(-5,canvas.height/2-5, canvas.width+10, 10);
+            }
+
+
+            function checkCollision(p1x, p1y, r1, p2x, p2y, r2) {
+                var a = r1 + r2;
+                var x = p1x - p2x;
+                var y = p1y - p2y;
+
+                return a > Math.sqrt((x * x) + (y * y));
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //add key listeners
+            window.onkeydown = function(e) {
+                var key = e.keyCode ? e.keyCode : e.which;
+
+                //87 65 83 68
+
+                if (key == 87) {
+                    player.aCheckYU = -player.speed;
+                } else if (key == 65) {
+                    player.aCheckXL = -player.speed;
+                } else if (key == 83) {
+                    player.aCheckYD = player.speed;
+                } else if (key == 68) {
+                    player.aCheckXR = player.speed;
+                } else if (key == 74) {
+                    player.rotateVelL=5/180*Math.PI;
+                } else if (key == 76) {
+                    player.rotateVelR=5/180*Math.PI;
+                }  else if (key == 32) {
+                    player.throw();
+                }
+            }
+
+            window.onkeyup = function(e) {
+                var key = e.keyCode ? e.keyCode : e.which;
+
+                //87 65 83 68
+
+                if (key == 87) {
+                    player.aCheckYU = 0;
+                } else if (key == 65) {
+                    player.aCheckXL = 0;
+                } else if (key == 83) {
+                    player.aCheckYD = 0;
+                } else if (key == 68) {
+                    player.aCheckXR = 0;
+                } else if (key == 74) {
+                    player.rotateVelL=0;
+                } else if (key == 76) {
+                    player.rotateVelR=0;
+                }
+            }
+
+            window.onmousedown = function(e) {
+                if (e.which == 1) {
+                    //left click
+
+                } else if (e.which == 3) {
+                    //right click
+                    
+                }
+            }
+
+            window.onmouseup = function(e) {
+                if (e.which == 1) {
+                    //left click
+
+                } else if (e.which == 3) {
+                    //right click
+                    
+                }
+            }
+
+        </script>
+    </body>
+</html>
