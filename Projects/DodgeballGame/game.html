@@ -103,17 +103,14 @@
 
                     this.lineLength = 50;
                     this.lineOffset = 25;
+
+                    this.turnSpeed = 5/180*Math.PI;
                 }
 
                 throw() {
-                    console.log("thrown!");
-                    console.log(this.tCost);
-                    console.log(this.throwAmount);
                     if (this.tCost<this.throwAmount && this.throwCooldown == 0) {
                         this.throwAmount-=this.tCost;
                         var dodgeBall = new DodgeBall(this.x, this.y, Math.cos(this.throwAngle)*this.throwSpeed, Math.sin(this.throwAngle)*this.throwSpeed, this);
-                        dodgeBalls.push(dodgeBall);
-                        console.log(dodgeBalls);
                         this.throwCooldown = this.maxCooldown;
                     }
                 }
@@ -233,6 +230,14 @@
                     if (Math.random()<0.2) {
                         this.yAcel*=-1;
                     }
+
+                    //fire at player
+
+                    //get angle to player
+                    var desiredAngle = Math.atan2((this.y-player.y),(this.x-player.x));
+
+                    desiredAngle = (desiredAngle)%(Math.PI*2);
+                    //shoot
                 }
 
                 update() {
@@ -448,9 +453,9 @@
                 } else if (key == 68) {
                     player.aCheckXR = player.speed;
                 } else if (key == 74) {
-                    player.rotateVelL=5/180*Math.PI;
+                    player.rotateVelL=player.turnSpeed;
                 } else if (key == 76) {
-                    player.rotateVelR=5/180*Math.PI;
+                    player.rotateVelR=player.turnSpeed;
                 }  else if (key == 32) {
                     player.throw();
                 }
