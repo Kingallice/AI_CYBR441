@@ -233,11 +233,26 @@
 
                     //fire at player
 
-                    //get angle to player
+                    //angle to player
                     var desiredAngle = Math.atan2((this.y-player.y),(this.x-player.x));
+                    desiredAngle = (desiredAngle-Math.PI)%(Math.PI*2);
 
-                    desiredAngle = (desiredAngle)%(Math.PI*2);
+                    var difference = ((desiredAngle-this.throwAngle+Math.PI*2)%(Math.PI*2));
+
+                    if (difference<this.turnSpeed || difference>Math.PI*2-this.turnSpeed) {
+                        this.throwAngle = desiredAngle;
+                    } else {
+                        if (difference<Math.PI) {
+                            this.throwAngle += this.turnSpeed;
+                        } else if (difference>Math.PI) {
+                            this.throwAngle -= this.turnSpeed;
+                        }
+                    }
+                    
+                    
                     //shoot
+                    this.throw();
+
                 }
 
                 update() {
