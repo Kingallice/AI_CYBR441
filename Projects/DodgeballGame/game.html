@@ -107,10 +107,17 @@
                     this.turnSpeed = 5/180*Math.PI;
                 }
 
+                canShoot() {
+                    return this.tCost<this.throwAmount && this.throwCooldown == 0;
+                }
+
                 throw() {
-                    if (this.tCost<this.throwAmount && this.throwCooldown == 0) {
+                    // console.log(this.throwCooldown);
+                    // console.log(this.throwAmount);
+                    if (this.canShoot()) {
                         this.throwAmount-=this.tCost;
                         var dodgeBall = new DodgeBall(this.x, this.y, Math.cos(this.throwAngle)*this.throwSpeed, Math.sin(this.throwAngle)*this.throwSpeed, this);
+                        dodgeBalls.push(dodgeBall);
                         this.throwCooldown = this.maxCooldown;
                     }
                 }
@@ -216,6 +223,10 @@
                     
                     //make AI blue.
                     this.rgb = "rgb(127, 127, 180)";
+
+
+                    //variables for logic
+                    this.adjustment = 0;
                 }
 
                 think() {
@@ -237,6 +248,17 @@
                     var desiredAngle = Math.atan2((this.y-player.y),(this.x-player.x));
                     desiredAngle = (desiredAngle-Math.PI)%(Math.PI*2);
 
+                    //randomly adjust shot.
+                    if (this.canShoot()) {
+                        if (Math.random()<0.2)
+                            this.adjustment = (-Math.sign(desiredAngle-this.throwAngle)) * (Math.round(Math.random() * 30)/10+20);
+                        else
+                            this.adjustment = 0;
+                    }
+                    
+                    if (this.adjustment!=0)
+                    desiredAngle += ((desiredAngle)/this.adjustment)
+                    
                     var difference = ((desiredAngle-this.throwAngle+Math.PI*2)%(Math.PI*2));
 
                     if (difference<this.turnSpeed || difference>Math.PI*2-this.turnSpeed) {
@@ -251,7 +273,11 @@
                     
                     
                     //shoot
-                    this.throw();
+                    if (this.canShoot()) {
+
+                        //change adjustment angle every shot.
+                        this.throw();
+                    }
 
                 }
 
