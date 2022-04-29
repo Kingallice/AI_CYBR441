@@ -8,7 +8,7 @@ Check out the projects [here](https://kingallice.github.io/AI_CYBR441/)
 ## Information
 This class worked on introducing students to the world of Artificial Intelligence. Students looked at search algorithms, game theory, observability, and other aspects that allow for creation of advanced implementations of automation.
 
-This page includes the projects that two students, Noah Mosel and Blake Meyer, teamed up to create throughout the Spring 2022 session of the CYBR 441 class about AI.
+This page includes Noah Mosel's personal projects, as well as the projects that he and Blake Meyer teamed up to create throughout the Spring 2022 session of the CYBR 441 class about AI.
 
 There is both the implementations and code, as well as, the "How" each set of problems was solved by us.
 
