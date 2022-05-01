@@ -80,6 +80,18 @@ def getRandomLegalMove(state):
     for x in state.legal_moves:
         legalMoveArr += [x]
     return legalMoveArr[random.randint(0,len(legalMoveArr)-1)].uci()
+
+def getRandomLegalMove_TakePreferred(state):
+    legalMoveArr = []
+    legalCaptures = []
+    for x in state.generate_legal_captures():
+        legalCaptures += [x]
+    if len(legalCaptures) > 0:
+        legalMoveArr = legalCaptures
+    else:
+        for x in state.legal_moves:
+            legalMoveArr += [x]
+    return legalMoveArr[random.randint(0,len(legalMoveArr)-1)].uci()
         
 ##Ensures challenge or game is selected before continuing.
 ##This ensures that the user does not need to restart program for a challenge
@@ -184,6 +196,27 @@ def MakeRandomMove(chal, color, line, board):
         requests.post(url+'bot/game/'+chal[0]+'/move/'+botMove, headers = {"Authorization":'Bearer '+token})
     return board
 
+##Gets a random legal move and plays it
+def MakeRandomMove_TakePreferred(chal, color, line, board):
+    if len(line['moves'].split(' '))%2 == color or (line['moves'] == '' and color == 0):
+        botMove = getRandomLegalMove_TakePreferred(board)
+
+        #tBoard = board.copy()
+        #print(tBoard)
+        #tBoard.push_uci(botMove)
+        #print(tBoard)
+        if board.piece_type_at(chess.parse_square(botMove[0:2])) == 5:
+            for x in board.attackers(color, chess.parse_square(botMove[2:])):
+                print(x, '-', board.piece_at(x))
+                
+        #for x in tBoard.attackers(color,tBoard.piece_at(chess.parse_square(botMove[0:2]))):
+        #    print(tBoard.turn, tBoard.piece_at(x))
+        #print('\n\tMove:', botMove,'\tLen',len(botMove))
+        if len(botMove) > 4:
+            botMove = botMove[0:-1] + 'q'
+        requests.post(url+'bot/game/'+chal[0]+'/move/'+botMove, headers = {"Authorization":'Bearer '+token})
+    return board
+
 ##Will start or resume a challenge passed
 ##If active game -> resume | if challenge -> accept and play
 def startMatch(chal):
@@ -201,6 +234,7 @@ def startMatch(chal):
         for line in a.iter_lines():
             if line:
                 line = json.loads(line.decode('utf-8'))
+                #print(line)
                 keyArr = []
                 ##Places all keys into array to be searched
                 for x in line.keys():
@@ -210,8 +244,12 @@ def startMatch(chal):
                         break
                 ##If 'state' key -> setup current state of game
                 elif 'state' in keyArr:
-                    if line['white']['id'] == AccId:
-                        botColor = 0
+                    tempArr = []
+                    for x in line['white'].keys():
+                        tempArr += [x]
+                    if 'id' in tempArr:
+                        if line['white']['id'] == AccId:
+                            botColor = 0
                     else:
                         botColor = 1
                     line = line['state']
@@ -222,7 +260,7 @@ def startMatch(chal):
                 else:
                     board.push(chess.Move.from_uci(line['moves'].split(' ')[-1]))
                 ##Make Move
-                board = MakeRandomMove(chal, botColor, line, board)
+                board = MakeRandomMove_TakePreferred(chal, botColor, line, board)
 
 ##Gets all active games and resumes them
 def ResumeGames():
@@ -239,7 +277,7 @@ def AutoBot():
     for x in challenges:
         t = threading.Thread(target = startMatch, args=(x,))
         t.start()
-    time.sleep(5)
+    #time.sleep(5)
 
 ResumeGames()
 while True:
