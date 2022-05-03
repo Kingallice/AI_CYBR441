@@ -76,6 +76,7 @@ def getActiveGames():
         x = [game['gameId'],game['color'],game['opponent']['id']]
         #print(x)
         gms += [x]
+        
         #print("Game Number:",i,"\n\tGame Id: "+x[0],"\n\tBot Color: "+x[1],"\n\tOpponent: "+x[2])
     return gms
 
