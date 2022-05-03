@@ -95,6 +95,19 @@ def getRandomLegalMove_TakePreferred(state):
     else:
         for x in state.legal_moves:
             legalMoveArr += [x]
+
+    return legalMoveArr[random.randint(0,len(legalMoveArr)-1)].uci()
+
+def getRandomLegalMove_TakePreferredSaveQueen(state):
+    legalMoveArr = []
+    legalCaptures = []
+    for x in state.generate_legal_captures():
+        legalCaptures += [x]
+    if len(legalCaptures) > 0:
+        legalMoveArr = legalCaptures
+    else:
+        for x in state.legal_moves:
+            legalMoveArr += [x]
     
     posMove = legalMoveArr[random.randint(0,len(legalMoveArr)-1)]
     color = 1
@@ -248,6 +261,19 @@ def MakeRandomMove_TakePreferred(chal, color, line, board):
         requests.post(url+'bot/game/'+chal[0]+'/move/'+botMove, headers = {"Authorization":'Bearer '+token})
     return board
 
+def MakeFinalMove(chal, color, line, board):
+    if len(line['moves'].split(' '))%2 == color or (line['moves'] == '' and color == 0):
+        botMove = getRandomLegalMove_TakePreferredSaveQueen(board)
+        if board.fullmove_number % 2 == 0:
+            stock = requests.get('https://tablebase.lichess.ovh/standard?fen='+board.fen()).json()['moves']
+            #print('\n',stock,'\n\n',board.fen(), '\n',len(stock))
+            botMove = stock[random.randint(0,len(stock)-1)]['uci']
+
+        if len(botMove) > 4:
+            botMove = botMove[0:-1] + 'q'
+        requests.post(url+'bot/game/'+chal[0]+'/move/'+botMove, headers = {"Authorization":'Bearer '+token})
+    return board
+
 ##Will start or resume a challenge passed
 ##If active game -> resume | if challenge -> accept and play
 def startMatch(chal):
@@ -297,7 +323,8 @@ def startMatch(chal):
                 else:
                     board.push(chess.Move.from_uci(line['moves'].split(' ')[-1]))
                 ##Make Move
-                board = MakeRandomMove_TakePreferred(chal, botColor, line, board)
+                board = MakeFinalMove(chal, botColor, line, board)
+                #MakeRandomMove_TakePreferred(
 
 ##Gets all active games and resumes them
 def ResumeGames():
