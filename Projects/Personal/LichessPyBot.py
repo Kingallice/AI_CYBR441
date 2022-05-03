@@ -268,7 +268,7 @@ def MakeFinalMove(chal, color, line, board):
         if board.fullmove_number % 2 == 0:
             stock = requests.get('https://tablebase.lichess.ovh/standard?fen='+board.fen()).json()['moves']
             #print('\n',stock,'\n\n',board.fen(), '\n',len(stock))
-            botMove = stock[random.randint(0,len(stock)-1)]['uci']
+            botMove = stock[0]['uci']
 
         if len(botMove) > 4:
             botMove = botMove[0:-1] + 'q'
