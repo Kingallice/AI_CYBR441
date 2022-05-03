@@ -1,4 +1,5 @@
 ##Imports
+from os import remove
 import requests #API Calls
 import chess    #Chess Library
 import json     #Interprets JSON
@@ -67,10 +68,13 @@ def user_Number(val):
 def getActiveGames():
     gameList = requests.get(url+"account/playing", headers = {"Authorization":'Bearer '+token}, stream=True).json()['nowPlaying']
 
+    #print(gameList)
     gms = []
     for i in range(len(gameList)):
         game = gameList[i]
+        #print('\n\n',game)
         x = [game['gameId'],game['color'],game['opponent']['id']]
+        #print(x)
         gms += [x]
         #print("Game Number:",i,"\n\tGame Id: "+x[0],"\n\tBot Color: "+x[1],"\n\tOpponent: "+x[2])
     return gms
@@ -91,7 +95,33 @@ def getRandomLegalMove_TakePreferred(state):
     else:
         for x in state.legal_moves:
             legalMoveArr += [x]
-    return legalMoveArr[random.randint(0,len(legalMoveArr)-1)].uci()
+    
+    posMove = legalMoveArr[random.randint(0,len(legalMoveArr)-1)]
+    color = 1
+    if state.turn:
+        color = 0
+    noOption = False
+    while len(legalMoveArr) > 1:
+        posMove = legalMoveArr[random.randint(0,len(legalMoveArr)-1)]
+        if state.piece_type_at(chess.parse_square(posMove.uci()[0:2])) == 5:
+            #print(state.piece_at(chess.parse_square(posMove.uci()[2:])))
+            if len(state.attackers(color, chess.parse_square(posMove.uci()[2:]))) == 0:
+                #print('Queen not in danger.')
+                return posMove.uci()
+        legalMoveArr.remove(posMove)
+        if len(legalMoveArr) < 1 and not noOption:
+            for x in state.legal_moves:
+                legalMoveArr += [x]
+            noOption = True
+            print('No queen moves safe')
+        else:
+            for x in state.legal_moves:
+                legalMoveArr += [x]
+    
+            return legalMoveArr[random.randint(0,len(legalMoveArr)-1)].uci()
+
+
+    return posMove.uci()
         
 ##Ensures challenge or game is selected before continuing.
 ##This ensures that the user does not need to restart program for a challenge
@@ -205,9 +235,10 @@ def MakeRandomMove_TakePreferred(chal, color, line, board):
         #print(tBoard)
         #tBoard.push_uci(botMove)
         #print(tBoard)
-        if board.piece_type_at(chess.parse_square(botMove[0:2])) == 5:
-            for x in board.attackers(color, chess.parse_square(botMove[2:])):
-                print(x, '-', board.piece_at(x))
+
+        # if board.piece_type_at(chess.parse_square(botMove[0:2])) == 5:
+        #     for x in board.attackers(color, chess.parse_square(botMove[2:])):
+        #         print(x, '-', board.piece_at(x))
                 
         #for x in tBoard.attackers(color,tBoard.piece_at(chess.parse_square(botMove[0:2]))):
         #    print(tBoard.turn, tBoard.piece_at(x))
@@ -221,17 +252,21 @@ def MakeRandomMove_TakePreferred(chal, color, line, board):
 ##If active game -> resume | if challenge -> accept and play
 def startMatch(chal):
     ##Accepts Challenge Passed
-    requests.post(url+'challenge/'+chal[0]+'/accept', headers = {"Authorization":'Bearer '+token})
+    if chal not in getActiveGames():
+        requests.post(url+'challenge/'+chal[0]+'/accept', headers = {"Authorization":'Bearer '+token})
+        #print('Challenge Accepted')
     ##Creates Session for Game Stream
     s = requests.Session()
     ##Calls API for stream of Game States
     a = s.get(url+"bot/game/stream/"+chal[0], headers = {"Authorization":'Bearer '+token}, stream=True)
+    #print('Game Streaming')
     board = chess.Board()
     botColor = -1
     ##If ok -> continue moves
     if a.status_code == 200:
         ##Reads each line sent to bot instance
         for line in a.iter_lines():
+            #print(line,'\n')
             if line:
                 line = json.loads(line.decode('utf-8'))
                 #print(line)
@@ -250,6 +285,8 @@ def startMatch(chal):
                     if 'id' in tempArr:
                         if line['white']['id'] == AccId:
                             botColor = 0
+                        else:
+                            botColor = 1
                     else:
                         botColor = 1
                     line = line['state']
@@ -268,6 +305,7 @@ def ResumeGames():
 
     for x in challenges:
         t = threading.Thread(target = startMatch, args=(x,))
+        #print('Starting',x)
         t.start()
 
 ##Constantly looks for challenges; accepts and plays them
@@ -278,6 +316,12 @@ def AutoBot():
         t = threading.Thread(target = startMatch, args=(x,))
         t.start()
     #time.sleep(5)
+
+openBrowser = input("Would you like to open the bot's profile in a browser?(Y/N)")
+if openBrowser.lower() == 'y':
+    webbrowser.open(requests.get(url+"account", headers = {"Authorization":'Bearer '+token}).json()['url'])
+
+print('Bot Id:', AccId, '\n\tResuming Games\n\tTaking Challenges')
 
 ResumeGames()
 while True:
