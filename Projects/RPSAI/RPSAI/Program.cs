@@ -1,15 +1,89 @@
 ﻿using System;
+using System.IO;
+using System.Text.Json;
 
 namespace RPSAI
 {
     class Program
     {
+        public const string FILEPATH = "BN_RPS.txt";
+
         //public static int intRock,intPaper,intScissors;
         public static int[] outputs = new int[2];
         public static int[] lastThree = new int[3];
         public static string y = "";
-        static void Main(string[] args)
+        public static int user = -1;
+        AIClass rpsAI; // = new AIClass();
+        static int Main(string[] args)
         {
+            AIClass rpsAI = new AIClass();
+            /*
+            for (int i = 0; i < args.Length; i++)
+            {
+                Console.WriteLine("Arg: " + args[i]);// args);
+            }*/
+            bool blnReset = false;
+            if (args.Length == 2)
+                if(Int32.Parse(args[0]) == -1 || Int32.Parse(args[1]) == -1)
+                    blnReset = true;
+            if (File.Exists(FILEPATH) && !blnReset)
+            {
+                string fileIn = File.ReadAllText(FILEPATH);
+                //Console.WriteLine(fileIn);
+                if (fileIn != "")
+                {
+                    string[] fileParms = fileIn.Split(';');
+
+                    int rNum = Int32.Parse(fileParms[0].Trim().Split(':')[1]);
+                    int lL = Int32.Parse(fileParms[1].Trim().Split(':')[1]);
+                    int lNum = Int32.Parse(fileParms[2].Trim().Split(':')[1]);
+                    int lD = Int32.Parse(fileParms[3].Trim().Split(':')[1]);
+                    int dNum = Int32.Parse(fileParms[4].Trim().Split(':')[1]);
+
+                    string ArrPass = fileParms[5].Trim().Split(':')[1].Replace('[', ' ').Replace(']', ' ').Trim();
+                    int[] lThree = new int[3];
+                    for (int i = 0; i < lThree.Length; i++)
+                    {
+                        lThree[i] = Int32.Parse(ArrPass.Split(',')[i].Trim());
+                    }
+                    rpsAI = new AIClass(rNum, lL, lNum, lD, dNum, lThree);
+                }
+            }
+            else
+            {
+                var file = File.Create(FILEPATH);
+                rpsAI = new AIClass();
+                file.Close();
+                File.WriteAllText(FILEPATH, rpsAI.ToString());
+                // return(rpsAI.getPlay());
+            }
+            int winner = -1;
+            if (args.Length == 2)
+                winner = winCheck(Int32.Parse(args[0]), Int32.Parse(args[1]));
+
+            //Console.WriteLine(winner);
+            switch (winner)
+            {
+                case 0:
+                    rpsAI.repeatDraw();
+                    //Console.WriteLine(rpsAI.ToString());
+                    break;
+                case 2:
+                    rpsAI.repeatLoss();
+                    //Console.WriteLine(rpsAI.ToString());
+                    break;
+            }
+            int xPlay;
+            if (args.Length == 2)
+                xPlay = rpsAI.getPlay(Int32.Parse(args[1]));
+            else
+                xPlay = rpsAI.getPlay();
+            File.WriteAllText(FILEPATH, rpsAI.ToString());
+            //Console.WriteLine(xPlay);
+            return xPlay;
+        }
+        /*
+            //File.WriteAllText(FILEPATH, rpsAI.toString());
             bool botChange = false;
             int lastPlay = new Random().Next(1, 3);
             decimal mean = 0;
@@ -53,8 +127,9 @@ namespace RPSAI
             int l3Total = 0;
             Random r = new Random();
             int tempBot = -1;
-            while (rounds < 10000)
+            while (rounds < 100)
             {
+                File.WriteAllText(FILEPATH, rpsAI.ToString());
                 if (botChange)
                 {
                     botNum = changeBot(rounds, botNum, ChosenOne)[0];
@@ -75,6 +150,8 @@ namespace RPSAI
                         total++;
                     mean += outputs[i];
                 }
+                //rpsAI = new AIClass(rounds - 1, repeatLosses, new int[]{-1,-1,-1});
+                /*
                 if (total <= 0)
                     mean = (new Random()).Next(1, 3);
                 else if (hasAll(lastThree))
@@ -85,26 +162,27 @@ namespace RPSAI
                   //  mean = (Math.Round(mean / total) + 2) % 3 + 1;
                 else
                     mean = Math.Round(mean / total);
+
+                mean = rpsAI.getPlay(user);
+                Console.WriteLine(rpsAI.ToString());
                 //BATTLE RANDOM
                 //int prand = (new Random().Next(1, 3));
                 int botChoice = 0;
                 switch (botNum)
                 {
                     case 0: //Random
-                        botChoice = ((r.Next(1, 3)));
+                        botChoice = r.Next(0, 2);
                         break;
                     case 1: //Same AI
                         decimal AImean = (outputs[0] + outputs[1]) / 2;
-                        botChoice = ((int)Math.Round(AImean) + ChosenOne) % 3 + 1;
+                        botChoice = ((int)Math.Round(AImean) + ChosenOne) % 3;
                         break;
                     case 2: //R -> P -> S ...
-                        lastPlay = lastPlay % 3 + 1;
+                        lastPlay = lastPlay % 3;
                         botChoice = lastPlay;
                         break;
                     case 3: //R -> S -> P ...
                         lastPlay = (lastPlay - 1) % 3;
-                        if (lastPlay == 0)
-                            lastPlay = 3;
                         botChoice = lastPlay;
                         break;
                     case 4: //Pick One
@@ -117,13 +195,13 @@ namespace RPSAI
                     //switch
                     switch (botChoice)
                     {
-                        case 1:
+                        case 0:
                             userInput = "rock";
                             break;
-                        case 2:
+                        case 1:
                             userInput = "paper";
                             break;
-                        case 3:
+                        case 2:
                             userInput = "scissors";
                             break;
                     }
@@ -132,21 +210,47 @@ namespace RPSAI
                     userInput = Console.ReadLine().ToLower();
 
                 location++;
+                
                 switch (userInput)
                 {
                     case "rock":
-                        outputs[location % outputs.Length] = 1;
-                        lastThree[location % lastThree.Length] = 1;
+                        //outputs[location % outputs.Length] = 1;
+                        //lastThree[location % lastThree.Length] = 1;
+                        user = 0;
                         break;
                     case "paper":
-                        outputs[location % outputs.Length] = 2;
-                        lastThree[location % lastThree.Length] = 2;
+                        //outputs[location % outputs.Length] = 2;
+                        //lastThree[location % lastThree.Length] = 2;
+                        user = 1;
                         break;
                     case "scissors":
-                        outputs[location % outputs.Length] = 3;
-                        lastThree[location % lastThree.Length] = 3;
+                        //outputs[location % outputs.Length] = 3;
+                        //lastThree[location % lastThree.Length] = 3;
+                        user = 2;
                         break;
                 }
+                
+                int intWinner = winCheck((int)mean, user);
+
+                switch (intWinner)
+                {
+                    case 0:
+                        Console.WriteLine("Draw");
+                        results[1]++;
+                        rpsAI.repeatDraw();
+                        break;
+                    case 1:
+                        Console.WriteLine("P1 Wins");
+                        results[0]++;
+                        rpsAI.repeatLoss();
+                        break;
+                    case 2:
+                        Console.WriteLine("P2 Wins");
+                        results[2]++;
+                        
+                        break;
+                }
+                /*
                 switch (mean)
                 {
                     case 1:
@@ -235,14 +339,50 @@ namespace RPSAI
                     }
                     Console.WriteLine(mean);
                 }
-                Console.WriteLine("\n\nYour Current Results:\n---------------------\nWins:\t" + results[0] + "\nTies:\t" + results[1] + "\nLosses:\t" + results[2] + "\n---------------------\n");
+                */
+                //Console.WriteLine("\n\nYour Current Results:\n---------------------\nWins:\t" + results[0] + "\nTies:\t" + results[1] + "\nLosses:\t" + results[2] + "\n---------------------\n" + botChoice);
+            
+            //Console.WriteLine((int)Math.Round(mean));
+            //return (int)Math.Round(mean);
+        
+        //Inputs
+        //  0: rock
+        //  1: paper
+        //  2: scissors
+        //Outputs 0 for draw, 1 for P1 win, 2 for P2 win
+        public static int winCheck(int P1, int P2)
+        {
+            if (P1 == P2) //Determines Draw
+                return 0;
+            else if (P1 == 0) { 
+                if (P2 == 1)
+                    
+                    return 2; //P1 Rock, *P2 Paper
+                else
+                    return 1; //*P1 Rock, P2 Scissors
+            }
+            else if (P1 == 1) { 
+                if (P2 == 0)
+                    return 1; //*P1 Paper, P2 Rock
+                else
+                    return 2; //P1 Paper, *P2 Scissors
+            }
+            else {
+                if (P2 == 0)
+                    return 2; //P1 Scissors, *P2 Rock
+                else
+                    return 1; //*P1 Scissors, P2 Paper
             }
         }
+
+
         public static bool hasAll(int[] arr)
         {
             bool[] arrBool = { false, false, false };
             foreach (int x in arr)
             {
+                //arrBool[x] = true;
+                
                 switch (x)
                 {
                     case 1:

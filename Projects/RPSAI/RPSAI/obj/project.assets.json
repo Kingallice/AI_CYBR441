@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kinga\\source\\repos\\RPSAI\\RPSAI\\RPSAI.csproj",
+      "projectUniqueName": "C:\\Users\\kinga\\source\\repos\\AI_CYBR441\\Projects\\RPSAI\\RPSAI\\RPSAI.csproj",
       "projectName": "RPSAI",
-      "projectPath": "C:\\Users\\kinga\\source\\repos\\RPSAI\\RPSAI\\RPSAI.csproj",
+      "projectPath": "C:\\Users\\kinga\\source\\repos\\AI_CYBR441\\Projects\\RPSAI\\RPSAI\\RPSAI.csproj",
       "packagesPath": "C:\\Users\\kinga\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kinga\\source\\repos\\RPSAI\\RPSAI\\obj\\",
+      "outputPath": "C:\\Users\\kinga\\source\\repos\\AI_CYBR441\\Projects\\RPSAI\\RPSAI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"

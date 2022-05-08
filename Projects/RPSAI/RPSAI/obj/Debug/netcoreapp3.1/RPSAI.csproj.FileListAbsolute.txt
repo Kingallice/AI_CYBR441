@@ -12,3 +12,16 @@ C:\Users\kinga\source\repos\RPSAI\RPSAI\obj\Debug\netcoreapp3.1\RPSAI.pdb
 C:\Users\kinga\source\repos\RPSAI\RPSAI\obj\Debug\netcoreapp3.1\RPSAI.genruntimeconfig.cache
 C:\Users\kinga\source\repos\RPSAI\RPSAI\obj\Debug\netcoreapp3.1\RPSAI.csproj.AssemblyReference.cache
 C:\Users\kinga\source\repos\RPSAI\RPSAI\obj\Debug\netcoreapp3.1\RPSAI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\bin\Debug\netcoreapp3.1\RPSAI.exe
+C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\bin\Debug\netcoreapp3.1\RPSAI.deps.json
+C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\bin\Debug\netcoreapp3.1\RPSAI.runtimeconfig.json
+C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\bin\Debug\netcoreapp3.1\RPSAI.runtimeconfig.dev.json
+C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\bin\Debug\netcoreapp3.1\RPSAI.dll
+C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\bin\Debug\netcoreapp3.1\RPSAI.pdb
+C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\obj\Debug\netcoreapp3.1\RPSAI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\obj\Debug\netcoreapp3.1\RPSAI.AssemblyInfoInputs.cache
+C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\obj\Debug\netcoreapp3.1\RPSAI.AssemblyInfo.cs
+C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\obj\Debug\netcoreapp3.1\RPSAI.csproj.CoreCompileInputs.cache
+C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\obj\Debug\netcoreapp3.1\RPSAI.dll
+C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\obj\Debug\netcoreapp3.1\RPSAI.pdb
+C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\obj\Debug\netcoreapp3.1\RPSAI.genruntimeconfig.cache
