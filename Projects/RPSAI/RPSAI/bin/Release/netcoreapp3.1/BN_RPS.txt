@@ -1,0 +1,1 @@
+RoundNumber: 4; Wins: 0; LastLoss: 0; RepeatLoss: 0; LastDraw: 0; RepeatDraw: 0; LastThree: [-1, -1, -1]

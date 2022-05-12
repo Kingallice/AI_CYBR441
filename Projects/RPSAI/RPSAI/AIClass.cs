@@ -7,17 +7,19 @@ namespace RPSAI
     class AIClass
     {
         private int[] lastThree = {-1,-1,-1};
-        private int roundNumber, lastLoss, repeatLosses, lastDraw, repeatDraws;
+        private int roundNumber, totalWins, lastLoss, repeatLosses, lastDraw, repeatDraws;
         public AIClass()
         {
             lastThree = new int[] {-1, -1, -1};
             repeatLosses = 0;
             repeatDraws = 0;
             roundNumber = 0;
+            totalWins = 0;
         }
-        public AIClass(int round, int lastL, int losses, int lastD, int draws, int[] prevThree)
+        public AIClass(int round, int wins, int lastL, int losses, int lastD, int draws, int[] prevThree)
         {
             roundNumber = round;
+            totalWins = wins;
             lastLoss = lastL;
             repeatLosses = losses;
             lastDraw = lastD;
@@ -28,23 +30,23 @@ namespace RPSAI
         {
             int play = new Random().Next(0, 3);
 
+            int location = ((roundNumber-1) % lastThree.Length) + lastThree.Length;
+
             if (OppLast != -1) {
-                lastThree[(roundNumber) % lastThree.Length] = OppLast;
+                lastThree[(location) % lastThree.Length] = OppLast;
             }
             decimal mean;
             
-            mean = (lastThree[(roundNumber) % lastThree.Length] + lastThree[(roundNumber+2) % lastThree.Length]) / 2;
+            mean = (lastThree[(location) % lastThree.Length] + lastThree[(((roundNumber) % lastThree.Length) + lastThree.Length) % lastThree.Length]) / 2;
             //Console.WriteLine(roundNumber + ":" + lastThree[(roundNumber-1) % lastThree.Length] + "-" + lastThree[roundNumber % lastThree.Length]);
-            if (roundNumber > 1)
-            {
-                play = (int)mean;
+
+            if (hasAll(lastThree))
+                play = lastThree[(location + 1) % lastThree.Length];
+            else if (repeatLosses >= 15)
+                play = ((int)((Math.Round(mean)+1) % 3));
+            else{
+                play = ((int)Math.Round(mean, MidpointRounding.AwayFromZero))%3;
             }
-            else if (hasAll(lastThree))
-            {
-                play = lastThree[(roundNumber + 1) % lastThree.Length];
-            }
-            else if (repeatLosses >= 10)
-                play = (int)((Math.Round(mean) + 1) % 3);
             //else if 
             /*            if (roundNumber == 1) {
 
@@ -58,6 +60,7 @@ namespace RPSAI
 
             return play;*/
             roundNumber++;
+            //Console.WriteLine("\tRPSAI: " + play + "\tlastThree: " + string.Join(',', lastThree) + "\tLocation(index): " + lastThree[location%lastThree.Length] + "("+location%lastThree.Length+")");
             return play;
         }
 
@@ -80,6 +83,10 @@ namespace RPSAI
                 }
             }
             return arrBool[0] && arrBool[1] && arrBool[2];
+        }
+        public void win()
+        {
+            totalWins++;
         }
         public void repeatLoss()
         {
@@ -104,7 +111,7 @@ namespace RPSAI
 
         public string ToString()
         {
-            string strOut = "RoundNumber: " + roundNumber +"; LastLoss: " + lastLoss + "; RepeatLoss: " + repeatLosses + "; LastDraw: " + lastDraw + "; RepeatDraw: " + repeatDraws + "; LastThree: [";
+            string strOut = "RoundNumber: " + roundNumber +"; Wins: " + totalWins + "; LastLoss: " + lastLoss + "; RepeatLoss: " + repeatLosses + "; LastDraw: " + lastDraw + "; RepeatDraw: " + repeatDraws + "; LastThree: [";
 
             for(int i = 0; i < lastThree.Length; i++)
             {

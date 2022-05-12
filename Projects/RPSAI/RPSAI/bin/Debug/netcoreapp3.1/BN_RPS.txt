@@ -1,1 +1,1 @@
-RoundNumber: 1; LastLoss: 0; RepeatLoss: 0; LastDraw: 0; RepeatDraw: 0; LastThree: [-1, -1, -1]
+RoundNumber: 458; Wins: 144; LastLoss: 456; RepeatLoss: 0; LastDraw: 457; RepeatDraw: 0; LastThree: [2, 2, 2]

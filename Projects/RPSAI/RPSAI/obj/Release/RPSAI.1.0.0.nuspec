@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>RPSAI</id>
+    <version>1.0.0</version>
+    <authors>RPSAI</authors>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework=".NETCoreApp3.1" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\bin\Release\netcoreapp3.1\RPSAI.runtimeconfig.json" target="lib\netcoreapp3.1\RPSAI.runtimeconfig.json" />
+    <file src="C:\Users\kinga\source\repos\AI_CYBR441\Projects\RPSAI\RPSAI\bin\Release\netcoreapp3.1\RPSAI.dll" target="lib\netcoreapp3.1\RPSAI.dll" />
+  </files>
+</package>
